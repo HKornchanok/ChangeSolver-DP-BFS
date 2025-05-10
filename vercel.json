@@ -1,12 +1,13 @@
 {
   "version": 2,
   "buildCommand": "npm install && npm run build",
-  "outputDirectory": "dist/change-solver-dp-lcm-bfs",
+  "outputDirectory": "dist/change-solver-dp-lcm-bfs/browser",
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "framework": "angular"
 }
