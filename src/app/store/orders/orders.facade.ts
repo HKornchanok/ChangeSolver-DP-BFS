@@ -23,18 +23,6 @@ export class OrdersFacade {
       localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
     });
 
-    // Load initial state from local storage
-    this.loadOrdersFromStorage();
-  }
-
-  private loadOrdersFromStorage(): void {
-    const storedOrders = localStorage.getItem(ORDERS_STORAGE_KEY);
-
-    console.log('storedOrders', storedOrders);
-    if (storedOrders) {
-      const orders: Order[] = JSON.parse(storedOrders);
-      this.store.dispatch(OrdersActions.initializeOrders({ orders }));
-    }
   }
 
   modifyOrder(order: Order): void {
