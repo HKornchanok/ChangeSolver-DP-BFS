@@ -1,0 +1,87 @@
+<div class="p-8">
+  <!-- Colors Section -->
+  <section class="mb-12">
+    <h1 class="text-h1 mb-8">Color Palette</h1>
+
+    <!-- Primary Colors -->
+    <div class="mb-8">
+      <h2 class="text-h2 mb-4">Primary Colors</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div *ngFor="let color of colors.primary | keyvalue" 
+             class="p-4 rounded-lg" 
+             [style.background]="color.value"
+             [class.text-text-white]="color.key !== 'light'"
+             [class.text-text-black]="color.key === 'light'">
+          {{ color.key | titlecase }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Colors -->
+    <div class="mb-8">
+      <h2 class="text-h2 mb-4">Secondary Colors</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div *ngFor="let color of colors.secondary | keyvalue" 
+             class="p-4 rounded-lg" 
+             [style.background]="color.value"
+             [class.text-text-white]="color.key === 'dark'"
+             [class.text-text-black]="color.key !== 'dark'">
+          {{ color.key | titlecase }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Colors -->
+    <div class="mb-8">
+      <h2 class="text-h2 mb-4">Text Colors</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div *ngFor="let color of colors.text | keyvalue" 
+             class="p-4 rounded-lg" 
+             [style.background]="color.value"
+             [class.text-text-white]="color.key === 'gray' || color.key === 'gray2'"
+             [class.text-text-black]="color.key === 'light' || color.key === 'white'">
+          {{ color.key | titlecase }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Basic Colors -->
+    <div class="mb-8">
+      <h2 class="text-h2 mb-4">Basic Colors</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div *ngFor="let color of colors.basic | keyvalue" 
+             class="p-4 rounded-lg" 
+             [style.background]="color.value"
+             [class.text-text-white]="color.key === 'black'"
+             [class.text-text-black]="color.key === 'white'">
+          {{ color.key | titlecase }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Typography Section -->
+  <section>
+    <h1 class="text-h1 mb-8">Typography</h1>
+
+    <!-- Headings -->
+    <div class="mb-8">
+      <h2 class="text-h2 mb-4">Headings</h2>
+      <div class="space-y-4">
+        <div *ngFor="let heading of typography.headings" [class]="heading.class">
+          {{ heading.name }} ({{ heading.size }})
+        </div>
+      </div>
+    </div>
+
+    <!-- Body Text -->
+    <div class="mb-8">
+      <h2 class="text-h2 mb-4">Body Text</h2>
+      <div class="space-y-4">
+        <div *ngFor="let text of typography.body" [class]="text.class">
+          {{ text.name }} ({{ text.size }})
+        </div>
+      </div>
+    </div>
+  </section>
+</div> 

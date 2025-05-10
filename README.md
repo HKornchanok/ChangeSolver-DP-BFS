@@ -10,7 +10,9 @@ having the following feature as the minimum.
 - Calculate the total price of all the selected products.
 - Calculate the change and display a **SINGLE** combination of coins with the **LEAST** amount of coins to give back to the customer using a *fictional* Baht coins (1฿, 5฿, 7฿, 11฿) and display it in to the user.
   - e.g. If the change are a total of 54฿ the result should be "(11x3, 7x3)" i.e. __*three*__ 11฿ coin, and __*three*__ 7฿ coin coins.
-
+- Routes:
+  - `/` - Main page
+  - `/color-palette` - Color palette page
 
 ## Bonus Task
 

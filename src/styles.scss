@@ -1,0 +1,100 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  // Font Family
+  --font-sans: 'Kanit', sans-serif;
+
+  // Font Sizes
+  --font-size-h1: 36px;
+  --font-size-h2: 24px;
+  --font-size-h3: 20px;
+  --font-size-h4: 16px;
+  --font-size-b1: 20px;
+  --font-size-b2: 16px;
+  --font-size-b3: 14px;
+
+  // Font Weights
+  --font-weight-bold: 700;
+  --font-weight-regular: 400;
+
+  // Line Heights
+  --line-height-default: 1.2;
+
+  // Primary Colors
+  --primary: #FD5351;
+  --primary-light: #FFC7A0;
+  --primary-dark: #E55250;
+
+  // Secondary Colors
+  --secondary: #FFC7A0;
+  --secondary-dark: #C9AC83;
+
+  // Text Colors
+  --text-gray: #868686;
+  --text-gray2: #929292;
+  --text-light: #F5EFE2;
+  --text-white: #FFFFFF;
+
+  // Basic Colors
+  --black: #212121;
+  --white: #FFFFFF;
+}
+
+// Typography Classes
+.text-h1 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-default);
+}
+
+.text-h2 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-default);
+}
+
+.text-h3 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-default);
+}
+
+.text-h4 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-h4);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-default);
+}
+
+.text-b1 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-b1);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-default);
+}
+
+.text-b2 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-b2);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-default);
+}
+
+.text-b3 {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-b3);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-default);
+}
+
