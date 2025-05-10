@@ -7,7 +7,8 @@
     "build": "nx build",
     "watch": "nx build --watch --configuration development",
     "format": "prettier --write \"**/*.{ts,js,json,html,scss,css}\"",
-    "format:check": "prettier --check \"**/*.{ts,js,json,html,scss,css}\""
+    "format:check": "prettier --check \"**/*.{ts,js,json,html,scss,css}\"",
+    "deploy": "vercel deploy --prod"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +52,7 @@
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "vercel": "^33.5.1"
   }
 }
