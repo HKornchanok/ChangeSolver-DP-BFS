@@ -1,3 +1,4 @@
+
 # Easy Cashier
 
 > Create, Price, Calculate in one simple package!
@@ -34,8 +35,8 @@ Easy Cashier is a comprehensive point-of-sale application that streamlines order
 
 ### Prerequisites
 
-- Node.js (v18+)
-- npm (v9+)
+-   Node.js (v18+)
+-   npm (v9+)
 
 ### Installation
 
@@ -73,22 +74,23 @@ Build artifacts will be stored in the `dist/` directory.
 
 Common commands for development, building, and formatting:
 
-| **Command**            | **Description**                  |
-| ---------------------- | -------------------------------- |
-| `npm start`            | Run development server           |
-| `npm run build`        | Build for production             |
-| `npm run watch`        | Build and watch for changes      |
-| `npm run format`       | Format code with Prettier        |
-| `npm run format:check` | Check code formatting (Prettier) |
+| **Command**              | **Description**                   |
+|----------------------------|--------------------------------------|
+| `npm start`                | Run development server               |
+| `npm run build`            | Build for production                 |
+| `npm run watch`            | Build and watch for changes          |
+| `npm run format`           | Format code with Prettier            |
+| `npm run format:check`     | Check code formatting (Prettier)     |
+
 
 ## User Guide
 
 ### Managing Orders
 
-- **Browse Products**: View available items in the catalog
-- **Add to Cart**: Click "+" to add items to your order
-- **Adjust Quantity**: Use "+" and "-" to modify item quantities
-- **Remove Items**: Set quantity to 0 or use the remove button
+-   **Browse Products**: View available items in the catalog
+-   **Add to Cart**: Click "+" to add items to your order
+-   **Adjust Quantity**: Use "+" and "-" to modify item quantities
+-   **Remove Items**: Set quantity to 0 or use the remove button
 
 ### Payment Processing
 
@@ -96,29 +98,29 @@ Common commands for development, building, and formatting:
 2.  **Enter Payment**: Input the amount received from customer
 3.  **Calculate**: Process the payment and determine change
 4.  **View Results**:
-    - Total change amount
-    - Optimal coin combination
-    - Alternative withdrawal options
+    -   Total change amount
+    -   Optimal coin combination
+    -   Alternative withdrawal options
 
 ### Change Calculation
 
 The system calculates change using these denominations:
 
-- 11฿ coins
-- 7฿ coins
-- 5฿ coins
-- 1฿ coins
+-   11฿ coins
+-   7฿ coins
+-   5฿ coins
+-   1฿ coins
 
 ### Key Features
 
-- ✅ Real-time order management
-- ✅ Intelligent change calculation
-- ✅ Multiple withdrawal options
-- ✅ Memory-efficient processing
-- ✅ Support for large transactions
-- ✅ Comprehensive input validation
-  - Whole number validation
-  - Minimum payment validation
+-   ✅ Real-time order management
+-   ✅ Intelligent change calculation
+-   ✅ Multiple withdrawal options
+-   ✅ Memory-efficient processing
+-   ✅ Support for large transactions
+-   ✅ Comprehensive input validation
+    -   Whole number validation
+    -   Minimum payment validation
 
 ## Technical Details
 
@@ -150,19 +152,20 @@ F(11,7,5,1) = 1*11 - 1 = 10
 The algorithm leverages modular arithmetic to efficiently handle change calculations.  
 For amounts modulo 11, we use these precomputed optimal patterns:
 
-| Residue | Optimal Coin Combination |
-| ------- | ------------------------ |
-| 0       | (none needed)            |
-| 1       | 1 × 1                    |
-| 2       | 2 × 1                    |
-| 3       | 3 × 1                    |
-| 4       | 1 × 5 - 1 × 1            |
-| 5       | 1 × 5                    |
-| 6       | 1 × 7 - 1 × 1            |
-| 7       | 1 × 7                    |
-| 8       | 1 × 5 + 3 × 1            |
-| 9       | 1 × 5 + 4 × 1            |
-| 10      | 2 × 5                    |
+| Residue | Optimal Coin Combination    |
+|---------|-----------------------------|
+| 0       | (none needed)               |
+| 1       | 1 × 1                       |
+| 2       | 2 × 1                       |
+| 3       | 3 × 1                       |
+| 4       | 1 × 5 - 1 × 1               |
+| 5       | 1 × 5                       |
+| 6       | 1 × 7 - 1 × 1               |
+| 7       | 1 × 7                       |
+| 8       | 1 × 5 + 3 × 1               |
+| 9       | 1 × 5 + 4 × 1               |
+| 10      | 2 × 5                       |
+
 
 ### Algorithm Implementation
 
@@ -241,7 +244,7 @@ private handleLargeAmount(amount: number, coins: number[]): any[] {
   // For large amounts, calculate the base solution using mathematical properties
   const minCoins = this.findMinCoinsForLargeAmount(amount, coins);
   const baseSolution = this.getCompactSolution(amount, coins, minCoins);
-
+  
   return baseSolution ? [baseSolution] : [];
 }
 
@@ -264,7 +267,7 @@ private findAllCombinations(amount: number, minCoins: number, options: any[]) {
   const queue = new Array(Math.min(maxStates, 10000));  // Cap size
   let head = 0, tail = 0;  // Circular queue indices
   const visited = new Set<string>();  // Track visited states
-
+  
   // Start BFS
   queue[tail++] = {
     remaining: amount,
@@ -272,11 +275,11 @@ private findAllCombinations(amount: number, minCoins: number, options: any[]) {
     current: Array(COIN_SIZES.length).fill(0),
     totalUsed: 0,
   };
-
+  
   while (head !== tail) {
     // Process each state in the queue
     // ...
-
+    
     // For each state, try two options:
     // 1. Skip this coin denomination
     // 2. Take one of this coin denomination
@@ -301,11 +304,11 @@ For solving Diophantine equations in LCM optimization:
 ```typescript
 private extendedGcd(a: number, b: number): [number, number] {
   if (b === 0) return [1, 0];
-
+  
   const [x1, y1] = this.extendedGcd(b, a % b);
   const x = y1;
   const y = x1 - Math.floor(a / b) * y1;
-
+  
   return [x, y];
 }
 
@@ -321,36 +324,36 @@ For amounts modulo the largest coin, we use precomputed patterns:
 // Precomputed optimal values for remainders mod 11
 const remainderCoins = [0, 1, 2, 3, 4, 1, 2, 1, 3, 4, 2];
 return quotient + remainderCoins[remainder];
+
 ```
 
 This allows O(1) calculation for residue handling, dramatically speeding up the algorithm.
 
 ### Performance Characteristics
 
-- **Time Complexity**:
-
-  - Small amounts: O(n), where n is the amount
-  - Medium amounts: O(log n) with LCM optimization
-  - Large amounts: O(1) using mathematical properties
-
-- **Space Complexity**:
-
-  - Constant O(1) regardless of input size
-  - Maximum memory usage capped at 10,000 states
+-   **Time Complexity**:
+    
+    -   Small amounts: O(n), where n is the amount
+    -   Medium amounts: O(log n) with LCM optimization
+    -   Large amounts: O(1) using mathematical properties
+-   **Space Complexity**:
+    
+    -   Constant O(1) regardless of input size
+    -   Maximum memory usage capped at 10,000 states
 
 ### Edge Case Handling
 
-- **Zero or Negative Amounts**: Returns 0 or special values
-- **Very Large Amounts**: Uses mathematical properties to avoid overflow
-- **Non-Canonical Systems**: Fallback to complete search when greedy fails
+-   **Zero or Negative Amounts**: Returns 0 or special values
+-   **Very Large Amounts**: Uses mathematical properties to avoid overflow
+-   **Non-Canonical Systems**: Fallback to complete search when greedy fails
 
 ### Multiple Solution Support
 
-- Finds all optimal combinations with the same minimum coin count
-- Handles both unique and multiple solutions
-- Returns single optimal solution for very large amounts (>1000) to conserve memory
-- Recognizes when the greedy algorithm produces the optimal solution
+-   Finds all optimal combinations with the same minimum coin count
+-   Handles both unique and multiple solutions
+-   Returns single optimal solution for very large amounts (>1000) to conserve memory
+-   Recognizes when the greedy algorithm produces the optimal solution
 
----
+----------
 
 _Easy Cashier is implemented as an Angular service_
