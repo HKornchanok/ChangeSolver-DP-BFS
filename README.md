@@ -17,6 +17,13 @@
   - [Payment Processing](#payment-processing)
   - [Change Calculation](#change-calculation)
   - [Key Features](#key-features)
+- [Components](#components)
+  - [Pages](#pages)
+  - [Core Components](#core-components)
+  - [Features](#features)
+  - [Backend Integration](#backend-integration)
+  - [State Management & Performance](#state-management--performance)
+  - [Code Maintenance & Formatting](#code-maintenance--formatting)
 - [Technical Details](#technical-details)
   - [Coin Combination Algorithm](#coin-combination-algorithm)
   - [Core Algorithm Architecture](#core-algorithm-architecture)
@@ -122,6 +129,76 @@ The system calculates change using these denominations:
     -   Whole number validation
     -   Minimum payment validation
 
+# Components
+
+## Pages
+- `MainPageComponent`: The main application page that serves as the container for all other components
+- `ColorPaletteComponent`: Displays the color palette and typography system used in the application
+
+## Core Components
+- `BannerComponent`: Top banner section containing the "Add Product" button and modal
+  - `AddProductModalComponent`: Modal for adding new products with form validation
+
+- `ProductListComponent`: Displays the list of products with infinite scroll functionality
+  - `ShoeItemComponent`: Individual product card with add to cart functionality
+
+- `OrderSummaryComponent`: Shows the current order items and total
+  - `OrderItemComponent`: Individual order item with quantity controls
+
+- `PaymentSummaryComponent`: Handles payment calculation and change computation
+  - `WithdrawalOptionListComponent`: Displays all possible coin combinations for change
+  - `WithdrawalOptionItemComponent`: Individual coin combination display
+
+- `SearchBarComponent`: Search functionality for filtering products by name
+
+## Features
+- Responsive design for both desktop and mobile
+- Form validation for adding new products
+- Real-time total price calculation
+- Change calculation with optimal coin combinations
+- Search functionality
+- Efficient infinite scroll with Supabase pagination
+  - Loads only necessary data
+  - Implements cursor-based pagination
+  - Optimizes performance by fetching limited items per request
+- Color palette and typography system documentation
+- Supabase integration for data persistence and initial product data
+
+## Backend Integration
+- Connected to Supabase for data management
+- Initial product data stored in Supabase database
+- Real-time data synchronization
+- Optimized data fetching:
+  - Implements pagination
+  - Loads data in chunks to minimize initial load time
+  - Efficient querying with Supabase's range pagination
+  - Maintains smooth scrolling performance
+
+## State Management & Performance
+- NgRx implementation for robust state management:
+  - Centralized store for application state
+  - Actions and reducers for predictable state updates
+  - Selectors for efficient state access
+  - Facade pattern for simplified store interactions
+- Memory leak prevention:
+  - RxJS takeUntil operator for proper subscription cleanup
+  - Automatic unsubscription on component destruction
+  - Efficient memory management for long-lived components
+- Modern Angular Architecture:
+  - Standalone components for better maintainability
+  - Self-contained components with explicit dependencies
+  - Simplified testing and lazy loading
+  - Reduced bundle size through tree-shaking
+  - No need for NgModule declarations
+  - Easier component reuse and composition
+
+## Code Maintenance & Formatting
+- Prettier integration for consistent code formatting:
+  - Automatic code formatting on save
+  - Enforced consistent code style across the project
+  - Configurable formatting rules
+
+  
 ## Technical Details
 
 ### Coin Combination Algorithm
