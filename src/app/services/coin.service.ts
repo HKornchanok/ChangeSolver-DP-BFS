@@ -246,6 +246,8 @@ export class CoinService {
     // Use an iterative approach instead of recursion to avoid call stack overhead
     this.findAllCombinations(amount, minCoinsNeeded, options);
 
+    // We've already ensured uniqueness in findAllCombinations method
+    // No need for extra filtering here
     return options;
   }
 
@@ -456,30 +458,26 @@ export class CoinService {
     options: { coins: { [key: number]: number }; totalCoins: number }[],
   ) {
     const COIN_SIZES = [11, 7, 5, 1];
+    
+    // Store solution keys for deduplication
+    const solutionKeys = new Set<string>();
 
-    // Check if there's a "greedy" solution using the largest coins first
-    // This works when coin systems have special properties (like canonical coin systems)
+    // Try the greedy solution if it's optimal
     const greedySolution = this.tryGreedySolution(amount, COIN_SIZES);
     if (greedySolution && greedySolution.totalCoins === minCoins) {
+      // Add to options and mark as visited
       options.push(greedySolution);
-
-      // For many coin systems, if greedy is optimal, it's the unique solution
-      // If we want to find all solutions anyway, we would continue below
+      const greedyKey = this.createSolutionKey(greedySolution.coins);
+      solutionKeys.add(greedyKey);
     }
 
-    // If we only want the greedy solution when optimal, we would return here
-    // But we'll continue to find all optimal solutions
-
     // Use a more memory-efficient breadth-first search
-    // Instead of storing entire arrays of coin counts, we'll use a more compact representation
-    // We'll also use a queue with a fixed size based on the possible states
-
-    // Calculate the maximum state space size to pre-allocate memory
-    const maxStates = COIN_SIZES.reduce((acc, coin) => acc * (1 + Math.floor(amount / coin)), 1);
+    // Calculate a reasonable size for the queue
+    const maxStates = Math.min(10000, amount * COIN_SIZES.length);
     const visited = new Set<string>(); // Track visited states to avoid redundant work
 
     // For BFS we use an array as queue with manual tracking of head/tail indices
-    const queue = new Array(Math.min(maxStates, 10000)); // Cap size to avoid excessive memory usage
+    const queue = new Array(maxStates);
     let head = 0;
     let tail = 0;
 
@@ -511,7 +509,13 @@ export class CoinService {
               coins[c] = current[i];
             }
           });
-          options.push({ coins, totalCoins: totalUsed });
+          
+          // Check if we've already found this solution
+          const solutionKey = this.createSolutionKey(coins);
+          if (!solutionKeys.has(solutionKey)) {
+            options.push({ coins, totalCoins: totalUsed });
+            solutionKeys.add(solutionKey);
+          }
         }
         continue;
       }
@@ -545,6 +549,19 @@ export class CoinService {
         if (tail >= queue.length) tail = 0; // Circular queue
       }
     }
+  }
+
+  /**
+   * Creates a unique string key for a coin combination to assist with deduplication.
+   * @param coins - Coin combination object
+   * @returns String key representing the combination
+   */
+  private createSolutionKey(coins: { [key: number]: number }): string {
+    // Sort by coin denomination for consistent keys
+    return this.COIN_SIZES
+      .filter(coin => coins[coin] > 0)
+      .map(coin => `${coin}:${coins[coin]}`)
+      .join('|');
   }
 
   /**
