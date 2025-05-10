@@ -3,5 +3,5 @@ import { ColorPaletteComponent } from './pages/color-palette/color-palette.compo
 
 export const routes: Routes = [
   { path: 'color-palette', component: ColorPaletteComponent },
-  { path: '', redirectTo: '/color-palette', pathMatch: 'full' }
-]; 
+  { path: '', redirectTo: '/color-palette', pathMatch: 'full' },
+];

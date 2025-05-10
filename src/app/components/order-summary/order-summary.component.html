@@ -1,0 +1,37 @@
+<div class="rounded-xl flex flex-col gap-4 text-[var(--text-white)] h-[45vh]">
+  <h4 class="text-lg flex justify-between items-center flex-shrink-0">
+    <span class="flex items-center gap-2">
+      <img src="assets/icons/notification-status.svg" alt="notification-status" class="w-5 h-5" />
+      Current Order
+    </span>
+    <span class="text-h3 text-[var(--text-white)]">{{ orders.length }} Item</span>
+  </h4>
+
+  <div
+    class="flex-1 px-2 overflow-y-auto min-h-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[var(--black)] [&::-webkit-scrollbar-thumb]:bg-[var(--text-gray)] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[var(--text-white)]"
+  >
+    <app-order-item
+      *ngFor="let order of orders; trackBy: trackByFn"
+      [order]="order"
+      (increase)="increaseAmount($event)"
+      (decrease)="decreaseAmount($event)"
+      (remove)="removeOrder($event)"
+    ></app-order-item>
+
+    <div
+      *ngIf="orders.length === 0"
+      class="flex flex-col items-center justify-center text-[var(--text-gray)] py-8"
+    >
+      <img src="assets/icons/shopping-cart.svg" alt="Shopping Cart" class="w-[150px] h-[150px]" />
+      <p>There are no items in your cart</p>
+    </div>
+  </div>
+
+  <div
+    *ngIf="orders.length > 0"
+    class="flex items-center justify-between bg-[var(--text-gray2)] rounded-lg px-4 py-2 flex-shrink-0"
+  >
+    <span class="text-h2 font-semibold text-black">Total</span>
+    <span class="text-h2 font-semibold text-black">{{ total | number: '1.0-0' }} ฿</span>
+  </div>
+</div>

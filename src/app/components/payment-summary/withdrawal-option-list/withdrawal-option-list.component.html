@@ -1,0 +1,30 @@
+<div
+  *ngIf="withdrawalOptions.length === 0"
+  class="flex flex-col items-center justify-center text-[var(--text-gray)] py-6 text-center"
+>
+  <span class="text-4xl mb-2">🧾</span>
+  <p>Please select a product and provide the amount of money received from the customer</p>
+</div>
+<div *ngIf="withdrawalOptions.length" class="flex flex-col gap-2 h-[30vh]">
+  <div
+    class="flex-1 p-2 overflow-y-auto min-h-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[var(--black)] [&::-webkit-scrollbar-thumb]:bg-[var(--text-gray)] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[var(--text-white)]"
+  >
+    <ng-container *ngFor="let option of withdrawalOptions; let i = index">
+      <div class="mt-4">
+        <div class="text-[var(--text-white)] text-h4 font-semibold mb-2">
+          Customer Withdrawal Options {{ i + 1 }}
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <ng-container *ngFor="let coinSize of coinSizes">
+            <ng-container *ngIf="option.coins[coinSize] > 0">
+              <app-withdrawal-option-item
+                [coinSize]="coinSize"
+                [count]="option.coins[coinSize]"
+              ></app-withdrawal-option-item>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

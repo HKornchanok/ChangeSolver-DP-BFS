@@ -1,0 +1,68 @@
+.shoe-card {
+  background: #191919;
+  border: 1.5px solid #333;
+  border-radius: 16px;
+  padding: 24px 20px;
+  color: var(--text-white);
+  max-width: 320px;
+  box-shadow: none;
+}
+
+.shoe-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-white);
+  margin-bottom: 4px;
+}
+
+.shoe-desc {
+  color: var(--text-gray);
+  font-size: 1rem;
+  margin-bottom: 18px;
+}
+
+.shoe-price-qty {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.shoe-price {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--text-white);
+}
+
+.qty-selector {
+  display: flex;
+  align-items: center;
+  background: #f25c5c;
+  border-radius: 9999px;
+  padding: 0 18px;
+  height: 48px;
+  gap: 16px;
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.qty-btn:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.qty-num {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  min-width: 20px;
+  text-align: center;
+}

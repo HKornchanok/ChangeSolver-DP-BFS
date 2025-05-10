@@ -1,52 +1,187 @@
 # Easy Cashier
+
 _Create, Price, Calculate in one simple package!_
 
-## Your Tasks
-Create a web application that have the visual resemblance to the design while 
-having the following feature as the minimum.
+## Table of Contents
 
-- Recreate the visual from the design (both desktop and mobile version). See ```design-explanation.md``` file for more information.
-- Create a form with validation for adding new product.
-- Calculate the total price of all the selected products.
-- Calculate the change and display a **SINGLE** combination of coins with the **LEAST** amount of coins to give back to the customer using a *fictional* Baht coins (1฿, 5฿, 7฿, 11฿) and display it in to the user.
-  - e.g. If the change are a total of 54฿ the result should be "(11x3, 7x3)" i.e. __*three*__ 11฿ coin, and __*three*__ 7฿ coin coins.
-- Routes:
-  - `/` - Main page
-  - `/color-palette` - Color palette page
+- [Running the Project](#running-the-project)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Development Server](#development-server)
+  - [Building for Production](#building-for-production)
+  - [Additional Commands](#additional-commands)
+- [How to Use](#how-to-use)
+  - [Managing Orders](#1-managing-orders)
+  - [Payment Processing](#2-payment-processing)
+  - [Change Calculation](#3-change-calculation)
+  - [Features](#4-features)
+- [Coin Combination Algorithm](#coin-combination-algorithm)
+  - [Algorithm Overview](#algorithm-overview)
+  - [Key Features](#key-features)
 
-## Bonus Task
+## Running the Project
 
-****_Please Complete and Commit all of your main task first before attempting any of the bonus tasks._**
+### Prerequisites
 
-### Task B1: "All Accounted For"
+- Node.js (v18 or higher)
+- npm (v9 or higher)
 
-Display **_all_** possible combination, with the **_least_** amount of coins, 
-that can be given to the customer.
+### Installation
 
-e.g. 
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+npm install
 ```
-  Change = 54฿
-  Combinations: (11x3, 7x3), (11x4, 5x2) 
+
+### Development Server
+
+To start the development server:
+
+```bash
+npm start
 ```
-or
+
+This will start the application on `http://localhost:4200/`
+
+### Building for Production
+
+To build the project for production:
+
+```bash
+npm run build
 ```
-  Change = 42฿
-  Combinations: (11x3, 7x1, 1x2), (11x2, 7x2, 5x1, 1x1), (11x2, 5x4), (11x1, 7x3, 5x2), (7x6)
-```
 
-### Evaluation Criteria
+The build artifacts will be stored in the `dist/` directory.
 
-- Task completion
-- A proper utilization of TypeScript
-- Code logic
-- Code readability (Including comment)
-- Code maintainability
-- Git usage
-- Bonus task (But only when all the main tasks were completed)
+### Additional Commands
 
-### CodeSubmit
+- `npm run watch` - Build and watch for changes
+- `npm run format` - Format code using Prettier
+- `npm run format:check` - Check code formatting
 
-Please organize your code as if it were
-going into production - then push your changes to the master branch.
+## How to Use
 
-Have fun coding! 🚀
+Easy Cashier is a point-of-sale application that helps you manage orders and calculate change efficiently. Here's how to use it:
+
+### 1. Managing Orders
+
+- Browse through the available products
+- Click the "+" button to add items to your cart
+- Use the "+" and "-" buttons to adjust quantities
+- Items can be removed from the cart by setting their quantity to 0
+
+### 2. Payment Processing
+
+1. After adding items to your cart, you'll see the total amount due
+2. Enter the amount of money received from the customer in the "Received Money" field
+3. Click "Calculate" to process the payment
+4. The system will automatically:
+   - Calculate the change amount
+   - Show the optimal coin combination for the change
+   - Display all possible withdrawal options using the available coins (11฿, 7฿, 5฿, 1฿)
+
+### 3. Change Calculation
+
+The system uses an advanced algorithm to calculate change using the following coin denominations:
+
+- 11฿ coins
+- 7฿ coins
+- 5฿ coins
+- 1฿ coins
+
+The algorithm will:
+
+- Find the optimal combination of coins
+- Show all possible combinations that use the minimum number of coins
+- Handle large amounts efficiently
+- Prevent memory issues with large transactions
+
+### 4. Features
+
+- Real-time order management
+- Automatic change calculation
+- Multiple withdrawal options
+- Memory-efficient processing
+- Support for large transactions
+- Input validation for received money
+- Whole number validation
+- Minimum payment validation
+
+# Coin Combination Algorithm
+
+This project implements an efficient algorithm for finding optimal coin combinations for a given amount using coins of denominations [11, 7, 5, 1]. The implementation focuses on three key aspects: minimal memory usage, optimized runtime, and prevention of brute force approaches.
+
+## Algorithm Overview
+
+The implementation uses several sophisticated techniques to handle different scenarios efficiently:
+
+### 1. Memory-Efficient Implementation
+
+- Constant space complexity O(1) for large amounts
+- Sliding window dynamic programming approach
+- Circular queue implementation with fixed memory allocation
+- No recursive calls to prevent stack overflow
+- Memory usage capped at 10,000 states regardless of input size
+
+### 2. Runtime Optimization
+
+- O(n) time complexity for basic cases
+- Mathematical shortcuts for common scenarios
+- Early termination for optimal solutions
+- Efficient state tracking and pruning
+- Precomputed optimal values for remainders
+- LCM (Least Common Multiple) optimization for specific cases
+
+### 3. Brute Force Prevention
+
+- Smart mathematical properties utilization
+- Frobenius number properties for optimization
+- GCD/LCM relationships between coin pairs
+- Efficient residue handling
+- Pattern recognition for common cases
+- Mathematical shortcuts for large amounts
+
+### 4. Advanced Techniques
+
+- Frobenius coin problem solution for amounts > 1000
+- Mathematical properties of the coin system [11,7,5,1]
+- Efficient residue calculations
+- Pattern-based optimization
+- State space reduction techniques
+
+## Key Features
+
+1. **Memory Efficiency**
+
+   - Constant space usage for large amounts
+   - Sliding window DP implementation
+   - Capped queue size to prevent memory issues
+   - No recursive stack usage
+   - Fixed memory allocation
+
+2. **Performance Optimizations**
+
+   - Early termination for optimal solutions
+   - Mathematical shortcuts for common cases
+   - Efficient state tracking and pruning
+   - Pattern-based optimization
+   - Smart mathematical properties utilization
+
+3. **Multiple Solution Support**
+
+   - Can find all possible optimal combinations
+   - Handles both unique and multiple solutions
+   - Efficient BFS implementation for finding all solutions
+   - Memory-efficient solution tracking
+
+4. **Edge Case Handling**
+   - Proper handling of large amounts
+   - Efficient residue calculations
+   - Mathematical optimization for special cases
+   - Pattern recognition for common scenarios
+
+## Usage
+
+The algorithm is implemented as an Angular service

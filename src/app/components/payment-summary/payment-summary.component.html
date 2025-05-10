@@ -1,0 +1,52 @@
+<div class="rounded-xl flex flex-col gap-4">
+  <h4 class="text-h2 text-[var(--text-white)] flex justify-between items-center flex-shrink-0">
+    <span class="flex items-center gap-2">
+      <img src="assets/icons/money-3.svg" alt="Money" class="w-5 h-5" />
+      Payment Summary
+    </span>
+  </h4>
+  <form [formGroup]="paymentForm" (ngSubmit)="calculateChange()">
+    <label class="text-[var(--text-white)] text-h4">Received Money</label>
+    <div class="flex flex-col gap-2">
+      <div class="flex gap-2">
+        <input
+          type="number"
+          placeholder="Enter received money"
+          formControlName="receivedMoney"
+          class="bg-[var(--black)] text-[var(--text-white)] rounded px-3 py-2 bg-black flex-1 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] border border-gray-800"
+          [class.border-red-500]="receivedMoneyControl.invalid && receivedMoneyControl.touched"
+        />
+        <button
+          type="submit"
+          [disabled]="paymentForm.invalid"
+          class="bg-[var(--primary-light)] hover:bg-[var(--primary)] text-black px-4 py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Calculate
+        </button>
+      </div>
+      <div
+        *ngIf="receivedMoneyControl.invalid && receivedMoneyControl.touched"
+        class="text-red-500 text-sm"
+      >
+        <span *ngIf="receivedMoneyControl.errors?.['required']">Received money is required</span>
+        <span *ngIf="receivedMoneyControl.errors?.['min']"
+          >Received money must be at least {{ total }}</span
+        >
+        <span *ngIf="receivedMoneyControl.errors?.['notWholeNumber']"
+          >Please enter a whole number without decimals</span
+        >
+        <span *ngIf="receivedMoneyControl.errors?.['hasDigits']"
+          >Please enter the amount in words, not digits</span
+        >
+      </div>
+    </div>
+  </form>
+  <app-withdrawal-option-list [withdrawalOptions]="withdrawalOptions"></app-withdrawal-option-list>
+  <div
+    *ngIf="change"
+    class="flex items-center justify-between bg-[var(--primary-light)] rounded-lg px-4 py-2 flex-shrink-0"
+  >
+    <span class="text-[var(--black)] text-h2 font-semibold">Total</span>
+    <span class="text-[var(--black)] text-h2 font-semibold">{{ change | number: '1.0-0' }} ฿</span>
+  </div>
+</div>

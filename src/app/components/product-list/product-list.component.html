@@ -1,0 +1,21 @@
+<section class="flex-1 flex flex-col h-[60vh]">
+  <div
+    class="grid grid-cols-2 p-1 lg:px-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-2 overflow-y-auto min-h-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[var(--black)] [&::-webkit-scrollbar-thumb]:bg-[var(--text-gray)] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[var(--text-white)]"
+    infiniteScroll
+    [infiniteScrollDistance]="scrollDistance"
+    [infiniteScrollThrottle]="throttle"
+    (scrolled)="onScroll()"
+    [scrollWindow]="false"
+  >
+    <app-shoe-item
+      *ngFor="let shoe of shoes$ | async; trackBy: trackByFn"
+      [shoe]="shoe"
+      (cartChange)="onCartChange($event)"
+    ></app-shoe-item>
+
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="col-span-full flex justify-center py-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
+    </div>
+  </div>
+</section>

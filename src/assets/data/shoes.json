@@ -1,0 +1,202 @@
+[
+  {
+    "name": "Nike Air Max 270",
+    "price": 4500,
+    "description": "The Nike Air Max 270 delivers visible cushioning under every step with a large window and fresh colorways."
+  },
+  {
+    "name": "Adidas Ultraboost 22",
+    "price": 5200,
+    "description": "The Ultraboost 22 features a responsive Boost midsole and a Primeknit+ upper that adapts to your foot."
+  },
+  {
+    "name": "New Balance 574",
+    "price": 3800,
+    "description": "A classic silhouette with modern comfort, the 574 features a suede and mesh upper with ENCAP midsole technology."
+  },
+  {
+    "name": "Puma RS-X",
+    "price": 4200,
+    "description": "The RS-X combines retro-inspired design with modern technology for a bold, comfortable sneaker."
+  },
+  {
+    "name": "Nike Air Force 1",
+    "price": 3900,
+    "description": "An iconic design with premium leather and classic comfort for everyday wear."
+  },
+  {
+    "name": "Adidas NMD_R1",
+    "price": 4600,
+    "description": "Combining streetwise style with Boost cushioning, the NMD_R1 offers a sock-like fit."
+  },
+  {
+    "name": "Asics Gel-Kayano 28",
+    "price": 5400,
+    "description": "Designed for stability and comfort, the Gel-Kayano 28 supports long runs with advanced cushioning."
+  },
+  {
+    "name": "Reebok Club C 85",
+    "price": 3300,
+    "description": "A throwback tennis shoe with soft leather and minimalist style."
+  },
+  {
+    "name": "Converse Chuck Taylor All Star",
+    "price": 2900,
+    "description": "The timeless canvas high-top that never goes out of style."
+  },
+  {
+    "name": "Vans Old Skool",
+    "price": 3100,
+    "description": "Classic skate shoe with durable suede and canvas upper."
+  },
+  {
+    "name": "Under Armour HOVR Phantom 2",
+    "price": 4900,
+    "description": "With HOVR cushioning and a sock-like upper, it’s built for high-performance comfort."
+  },
+  {
+    "name": "Saucony Jazz Original Vintage",
+    "price": 3600,
+    "description": "Retro running style with comfortable EVA midsole and classic suede details."
+  },
+  {
+    "name": "Fila Disruptor II",
+    "price": 3400,
+    "description": "A chunky sole and bold design bring a retro streetwear vibe."
+  },
+  {
+    "name": "Nike React Infinity Run Flyknit",
+    "price": 5300,
+    "description": "Engineered to reduce injury, this running shoe features React foam and a breathable Flyknit upper."
+  },
+  {
+    "name": "Adidas Yeezy Boost 350 V2",
+    "price": 8900,
+    "description": "Kanye West’s signature design with Primeknit upper and Boost cushioning."
+  },
+  {
+    "name": "New Balance 997H",
+    "price": 4100,
+    "description": "Modern interpretation of a classic with lightweight cushioning and mixed materials."
+  },
+  {
+    "name": "Puma Future Rider",
+    "price": 3500,
+    "description": "Retro-inspired design with bold color blocks and Rider Foam cushioning."
+  },
+  {
+    "name": "Reebok Zig Kinetica",
+    "price": 4700,
+    "description": "Innovative Zig Energy bands return energy with every step."
+  },
+  {
+    "name": "Nike Blazer Mid ’77",
+    "price": 3700,
+    "description": "Vintage design with modern comfort, featuring a leather upper and retro swoosh."
+  },
+  {
+    "name": "Asics Gel-Lyte III",
+    "price": 3900,
+    "description": "Classic split-tongue design with GEL cushioning and a sleek silhouette."
+  },
+  {
+    "name": "Adidas Forum Low",
+    "price": 4000,
+    "description": "Iconic basketball silhouette reimagined for modern streetwear."
+  },
+  {
+    "name": "Nike ZoomX Vaporfly NEXT%",
+    "price": 9500,
+    "description": "Elite running shoe built for speed with carbon plate and ZoomX foam."
+  },
+  {
+    "name": "Under Armour Curry Flow 9",
+    "price": 5900,
+    "description": "Built for performance on the court with lightweight cushioning and traction."
+  },
+  {
+    "name": "Vans Slip-On",
+    "price": 2700,
+    "description": "Minimalist, easy-to-wear design perfect for everyday use."
+  },
+  {
+    "name": "Nike Air Zoom Pegasus 39",
+    "price": 4500,
+    "description": "Versatile running shoe with responsive cushioning and breathable upper."
+  },
+  {
+    "name": "Adidas Superstar",
+    "price": 3600,
+    "description": "Legendary shell-toe sneaker that blends basketball heritage with street style."
+  },
+  {
+    "name": "New Balance Fresh Foam 1080v12",
+    "price": 5600,
+    "description": "Premium cushioning with breathable mesh for long-distance comfort."
+  },
+  {
+    "name": "Puma Cali Sport",
+    "price": 3900,
+    "description": "Chunky, fashion-forward sneaker with classic California vibes."
+  },
+  {
+    "name": "Reebok Nano X2",
+    "price": 4700,
+    "description": "Designed for cross-training with added stability and flexibility."
+  },
+  {
+    "name": "Asics Novablast 3",
+    "price": 5200,
+    "description": "Propulsive cushioning and lightweight design for energy-packed runs."
+  },
+  {
+    "name": "Converse Run Star Hike",
+    "price": 4400,
+    "description": "Bold platform sole with classic Converse design."
+  },
+  {
+    "name": "Nike Air Huarache",
+    "price": 4200,
+    "description": "Neoprene bootie construction offers a snug, supportive fit with retro flair."
+  },
+  {
+    "name": "Adidas ZX 2K Boost",
+    "price": 4800,
+    "description": "Futuristic style meets comfort with responsive Boost and mesh upper."
+  },
+  {
+    "name": "New Balance 990v5",
+    "price": 6900,
+    "description": "High-end craftsmanship and all-day comfort in an iconic silhouette."
+  },
+  {
+    "name": "Fila Ray Tracer",
+    "price": 3300,
+    "description": "Chunky sole sneaker with a mix of textures and retro styling."
+  },
+  {
+    "name": "Under Armour Charged Assert 9",
+    "price": 3100,
+    "description": "Reliable running shoe with Charged Cushioning® for smooth performance."
+  },
+  {
+    "name": "Nike SB Dunk Low",
+    "price": 5700,
+    "description": "Skateboarding classic with premium leather and responsive cushioning."
+  },
+  {
+    "name": "Adidas Terrex Free Hiker",
+    "price": 6200,
+    "description": "Trail-ready shoe with Boost cushioning and durable Primeknit upper."
+  },
+  {
+    "name": "Puma Suede Classic",
+    "price": 3000,
+    "description": "Timeless silhouette with soft suede upper and rubber outsole."
+  },
+  {
+    "name": "Reebok Classic Leather",
+    "price": 3500,
+    "description": "Clean lines and cushioned ride define this all-time favorite."
+  }
+]

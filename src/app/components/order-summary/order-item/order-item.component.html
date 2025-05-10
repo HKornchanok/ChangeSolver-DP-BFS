@@ -1,0 +1,24 @@
+<div
+  class="bg-[var(--black)] rounded-lg p-4 flex items-center justify-between mb-4 border border-gray-800"
+>
+  <div class="flex flex-col">
+    <p class="font-semibold uppercase text-h3 font-bold">{{ order.name }}</p>
+    <div
+      class="flex items-center gap-2 mt-2 border border-[var(--text-gray)] rounded-full px-2 py-0 w-20 justify-between"
+    >
+      <button (click)="onDecrease()" class="text-[var(--white)]">
+        <img src="assets/icons/minus.svg" alt="Decrease" class="w-[20px] h-[20px]" />
+      </button>
+      <span class="text-[var(--white)] text-b1">{{ order.quantity }}</span>
+      <button (click)="onIncrease()" class="text-[var(--white)]">
+        <img src="assets/icons/add.svg" alt="Increase" class="w-[20px] h-[20px]" />
+      </button>
+    </div>
+  </div>
+  <div class="flex flex-col items-end justify-between gap-2">
+    <button (click)="onRemove()" class="text-[var(--text-gray)] hover:text-red-500 text-sm">
+      <img src="assets/icons/trash.svg" alt="Trash" class="w-[20px] h-[20px]" />
+    </button>
+    <p class="text-sm">{{ order.price * order.quantity | number: '1.0-0' }} ฿</p>
+  </div>
+</div>

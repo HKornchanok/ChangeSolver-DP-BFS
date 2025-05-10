@@ -1,0 +1,37 @@
+<div
+  class="bg-[var(--bg-black)] rounded-xl border border-[var(--text-gray2)] p-2 h-[180px] flex flex-col"
+>
+  <div class="flex-1">
+    <div class="text-h3 text-[var(--white)] font-bold line-clamp-1">
+      {{ shoe.name || 'No name provided' }}
+    </div>
+    <div class="text-b3 text-[var(--text-gray)] line-clamp-4 mt-2">
+      {{ shoe.description || 'No description available' }}
+    </div>
+  </div>
+  <div class="flex justify-between items-center mt-auto">
+    <div class="text-h4 text-[var(--white)] font-bold">
+      {{ shoe.price | currency: 'THB' : 'symbol-narrow' : '1.0-0' }}
+    </div>
+    <div *ngIf="amount === 0" class="flex items-center">
+      <button
+        (click)="addToCart()"
+        class="bg-[var(--primary)] text-[var(--white)] text-h2 rounded-full w-10 h-10 flex items-center justify-center focus:outline-none self-center"
+      >
+        <img src="assets/icons/shopping-cart.svg" alt="Shopping Cart" class="w-5 h-5" />
+      </button>
+    </div>
+    <div
+      *ngIf="amount > 0"
+      class="bg-[var(--primary)] flex items-center rounded-full h-10px-2 py-0 h-10 w-20 justify-between"
+    >
+      <button (click)="decreaseAmount()" class="text-[var(--white)]">
+        <img src="assets/icons/minus.svg" alt="Decrease" class="w-[20px] h-[20px]" />
+      </button>
+      <span class="text-[var(--white)] text-b1">{{ amount }}</span>
+      <button (click)="increaseAmount()" class="text-[var(--white)]">
+        <img src="assets/icons/add.svg" alt="Increase" class="w-[20px] h-[20px]" />
+      </button>
+    </div>
+  </div>
+</div>

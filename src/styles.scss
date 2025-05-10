@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-@use "tailwindcss";
+@use 'tailwindcss';
 
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
 
@@ -22,30 +22,33 @@
   --font-size-b3: 14px;
 
   // Font Weights
-  --font-weight-bold: 700;
+  --font-weight-bold: 550;
   --font-weight-regular: 400;
+  --font-weight-light: 0;
 
   // Line Heights
   --line-height-default: 1.2;
 
   // Primary Colors
-  --primary: #FD5351;
-  --primary-light: #FFC7A0;
-  --primary-dark: #E55250;
+  --primary: #fd5351;
+  --primary-light: #ffc7a0;
+  --primary-dark: #e55250;
+  --primary-gradient: linear-gradient(102deg, #e55250 35.35%, #ffc7a0 124.4%);
 
   // Secondary Colors
-  --secondary: #FFC7A0;
-  --secondary-dark: #C9AC83;
+  --secondary: #ffc7a0;
+  --secondary-dark: #c9ac83;
 
   // Text Colors
   --text-gray: #868686;
   --text-gray2: #929292;
-  --text-light: #F5EFE2;
-  --text-white: #FFFFFF;
+  --text-light: #f5efe2;
+  --text-white: #ffffff;
 
   // Basic Colors
+  --bg-black: #151514;
   --black: #212121;
-  --white: #FFFFFF;
+  --white: #ffffff;
 }
 
 // Typography Classes
@@ -59,21 +62,21 @@
 .text-h2 {
   font-family: var(--font-sans);
   font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-default);
 }
 
 .text-h3 {
   font-family: var(--font-sans);
   font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-default);
 }
 
 .text-h4 {
   font-family: var(--font-sans);
   font-size: var(--font-size-h4);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-default);
 }
 
@@ -94,7 +97,6 @@
 .text-b3 {
   font-family: var(--font-sans);
   font-size: var(--font-size-b3);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-light);
   line-height: var(--line-height-default);
 }
-

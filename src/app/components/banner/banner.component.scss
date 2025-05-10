@@ -1,0 +1,20 @@
+// Add any component-specific styles here
+
+@media (max-width: 767px) {
+  section {
+    margin-top: 180px;
+  }
+  section > div:last-child {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+  section img[alt='Sneaker'] {
+    position: absolute;
+    left: 50%;
+    top: -180px;
+    transform: translateX(-50%);
+    right: auto;
+  }
+}

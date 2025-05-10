@@ -7,11 +7,13 @@
     <div class="mb-8">
       <h2 class="text-h2 mb-4">Primary Colors</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div *ngFor="let color of colors.primary | keyvalue" 
-             class="p-4 rounded-lg" 
-             [style.background]="color.value"
-             [class.text-text-white]="color.key !== 'light'"
-             [class.text-text-black]="color.key === 'light'">
+        <div
+          *ngFor="let color of colors.primary | keyvalue"
+          class="p-4 rounded-lg"
+          [style.background]="color.value"
+          [class.text-text-white]="color.key !== 'light'"
+          [class.text-text-black]="color.key === 'light'"
+        >
           {{ color.key | titlecase }}
         </div>
       </div>
@@ -21,11 +23,13 @@
     <div class="mb-8">
       <h2 class="text-h2 mb-4">Secondary Colors</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div *ngFor="let color of colors.secondary | keyvalue" 
-             class="p-4 rounded-lg" 
-             [style.background]="color.value"
-             [class.text-text-white]="color.key === 'dark'"
-             [class.text-text-black]="color.key !== 'dark'">
+        <div
+          *ngFor="let color of colors.secondary | keyvalue"
+          class="p-4 rounded-lg"
+          [style.background]="color.value"
+          [class.text-text-white]="color.key === 'dark'"
+          [class.text-text-black]="color.key !== 'dark'"
+        >
           {{ color.key | titlecase }}
         </div>
       </div>
@@ -35,11 +39,13 @@
     <div class="mb-8">
       <h2 class="text-h2 mb-4">Text Colors</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div *ngFor="let color of colors.text | keyvalue" 
-             class="p-4 rounded-lg" 
-             [style.background]="color.value"
-             [class.text-text-white]="color.key === 'gray' || color.key === 'gray2'"
-             [class.text-text-black]="color.key === 'light' || color.key === 'white'">
+        <div
+          *ngFor="let color of colors.text | keyvalue"
+          class="p-4 rounded-lg"
+          [style.background]="color.value"
+          [class.text-text-white]="color.key === 'gray' || color.key === 'gray2'"
+          [class.text-text-black]="color.key === 'light' || color.key === 'white'"
+        >
           {{ color.key | titlecase }}
         </div>
       </div>
@@ -49,11 +55,13 @@
     <div class="mb-8">
       <h2 class="text-h2 mb-4">Basic Colors</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div *ngFor="let color of colors.basic | keyvalue" 
-             class="p-4 rounded-lg" 
-             [style.background]="color.value"
-             [class.text-text-white]="color.key === 'black'"
-             [class.text-text-black]="color.key === 'white'">
+        <div
+          *ngFor="let color of colors.basic | keyvalue"
+          class="p-4 rounded-lg"
+          [style.background]="color.value"
+          [class.text-text-white]="color.key === 'black'"
+          [class.text-text-black]="color.key === 'white'"
+        >
           {{ color.key | titlecase }}
         </div>
       </div>
@@ -84,4 +92,51 @@
       </div>
     </div>
   </section>
-</div> 
+
+  <!-- Icons Section -->
+  <section class="mt-12">
+    <h1 class="text-h1 mb-8">Icons</h1>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/add.svg" alt="Add" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Add</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/bag.svg" alt="Bag" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Bag</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/document-text.svg" alt="Document Text" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Document Text</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/minus.svg" alt="Minus" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Minus</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/money-3.svg" alt="Money" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Money</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/note-remove.svg" alt="Note Remove" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Note Remove</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/notification-status.svg" alt="Notification Status" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Notification Status</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/search-normal.svg" alt="Search" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Search</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/shopping-cart.svg" alt="Shopping Cart" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Shopping Cart</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 p-4 bg-[var(--black)] rounded-lg">
+        <img src="assets/icons/trash.svg" alt="Trash" class="w-8 h-8" />
+        <span class="text-sm text-[var(--white)]">Trash</span>
+      </div>
+    </div>
+  </section>
+</div>

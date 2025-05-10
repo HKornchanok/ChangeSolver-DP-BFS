@@ -1,0 +1,82 @@
+<div class="fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.9)]">
+  <div class="bg-[var(--black)] p-8 rounded-xl shadow-lg w-full max-w-md relative">
+    <h2 class="text-xl mb-4 text-white text-center">Add New Product</h2>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="flex flex-col items-center">
+      <div class="w-full">
+        <label class="block text-b2 text-white mb-2">Product Name</label>
+        <input
+          formControlName="name"
+          placeholder="Enter product name"
+          class="w-full mb-4 p-2 rounded bg-black text-white placeholder-gray-500 rounded-md"
+        />
+        <div
+          *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+          class="text-red-500 text-sm mb-2"
+        >
+          <span *ngIf="productForm.get('name')?.errors?.['required']"
+            >Product name is required</span
+          >
+          <span *ngIf="productForm.get('name')?.errors?.['minlength']"
+            >Name must be at least 3 characters</span
+          >
+        </div>
+      </div>
+
+      <div class="w-full">
+        <label class="block text-b2 text-white mb-2">Description</label>
+        <textarea
+          formControlName="description"
+          placeholder="Enter description"
+          class="w-full mb-4 p-2 rounded bg-black text-white placeholder-gray-500 rounded-md"
+        ></textarea>
+        <div
+          *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched"
+          class="text-red-500 text-sm mb-2"
+        >
+          <span *ngIf="productForm.get('description')?.errors?.['required']"
+            >Description is required</span
+          >
+          <span *ngIf="productForm.get('description')?.errors?.['maxlength']"
+            >Description should not exceed 100 characters.</span
+          >
+        </div>
+      </div>
+
+      <div class="w-full">
+        <label class="block text-b2 text-white mb-2">Price</label>
+        <input
+          type="number"
+          formControlName="price"
+          placeholder="Enter price"
+          class="w-full mb-4 p-2 rounded bg-black text-white placeholder-gray-500 rounded-md"
+        />
+        <div
+          *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+          class="text-red-500 text-sm mb-2"
+        >
+          <span *ngIf="productForm.get('price')?.errors?.['required']">Price is required</span>
+          <span *ngIf="productForm.get('price')?.errors?.['pattern']"
+            >Price should be a number.</span
+          >
+        </div>
+      </div>
+
+      <div class="flex justify-between gap-2 w-full">
+        <button
+          type="button"
+          class="w-1/2 px-4 py-2 rounded bg-[var(--bg-black)] text-white border border-white rounded-xl"
+          (click)="onClose()"
+        >
+          Close
+        </button>
+        <button
+          type="submit"
+          [disabled]="productForm.invalid"
+          class="w-1/2 px-4 py-2 rounded bg-[var(--primary-light)] text-black rounded-xl disabled:opacity-50"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -4,23 +4,22 @@ import { ColorPaletteComponent } from './pages/color-palette/color-palette.compo
 import { MainPageComponent } from './pages/main-page/main-page.component';
 
 export const routes: Routes = [
-    {
+  {
+    path: '',
+    component: AppComponent,
+    children: [
+      {
         path: '',
-        component: AppComponent,
-        children: [
-            {
-                path: '',
-                component: MainPageComponent
-            },
-            {
-                path: 'color-palette',
-                component: ColorPaletteComponent
-            }
-        ]
-    },
-    {
-        path: '**',
-        redirectTo: ''
-    }
+        component: MainPageComponent,
+      },
+      {
+        path: 'color-palette',
+        component: ColorPaletteComponent,
+      },
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
-    
