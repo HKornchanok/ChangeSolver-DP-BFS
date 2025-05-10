@@ -31,14 +31,18 @@
           }
         ],
         "styles": ["src/styles.scss"],
-        "scripts": []
+        "scripts": [],
+        "allowedCommonJsDependencies": [
+          "@supabase/realtime-js",
+          "ws"
+        ]
       },
       "configurations": {
         "production": {
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "500kB",
+              "maximumWarning": "600kB",
               "maximumError": "1MB"
             },
             {
