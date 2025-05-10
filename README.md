@@ -1,7 +1,7 @@
 
-# Easy Cashier
+# ChangeSolver-DP-LCM-BFS
 
-> Create, Price, Calculate in one simple package!
+> Solve, Optimize, and Scale coin change with precision-engineered algorithms!
 
 ## Table of Contents
 
@@ -29,7 +29,7 @@
 
 ## Overview
 
-Easy Cashier is a comprehensive point-of-sale application that streamlines order management and provides intelligent change calculation. The system uses an advanced algorithm optimized for both performance and memory efficiency.
+ChangeSolver-DP-LCM-BFS is a comprehensive point-of-sale algorithm module that streamlines change calculation using a multi-strategy approach. It is designed for high performance and low memory consumption, capable of solving for optimal coin combinations across various input sizes.
 
 ## Getting Started
 
@@ -356,4 +356,4 @@ This allows O(1) calculation for residue handling, dramatically speeding up the 
 
 ----------
 
-_Easy Cashier is implemented as an Angular service_
+_ChangeSolver-DP-LCM-BFS is implemented as an Angular service_
