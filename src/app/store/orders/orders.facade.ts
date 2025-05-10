@@ -22,7 +22,6 @@ export class OrdersFacade {
     this.orders$.subscribe(orders => {
       localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
     });
-
   }
 
   modifyOrder(order: Order): void {

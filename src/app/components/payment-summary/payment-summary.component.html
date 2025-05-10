@@ -41,7 +41,10 @@
       </div>
     </div>
   </form>
-  <app-withdrawal-option-list class="h-[30vh]" [withdrawalOptions]="withdrawalOptions"></app-withdrawal-option-list>
+  <app-withdrawal-option-list
+    class="h-[30vh]"
+    [withdrawalOptions]="withdrawalOptions"
+  ></app-withdrawal-option-list>
   <div
     *ngIf="change"
     class="flex items-center justify-between bg-[var(--primary-light)] rounded-lg px-4 py-2 flex-shrink-0"

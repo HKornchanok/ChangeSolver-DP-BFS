@@ -1,9 +1,11 @@
 <div
   *ngIf="withdrawalOptions.length === 0"
   class="flex flex-col items-center justify-center text-[var(--text-gray)] py-8 bg-[var(--black)] h-[100%] rounded-xl"
-  >
-  <img src="assets/icons/note-remove.svg" alt="note-remove" class="w-10 h-10 mb-2">
-  <p class="text-center p-2">Please select a product and provide the amount of money received from the customer</p>
+>
+  <img src="assets/icons/note-remove.svg" alt="note-remove" class="w-10 h-10 mb-2" />
+  <p class="text-center p-2">
+    Please select a product and provide the amount of money received from the customer
+  </p>
 </div>
 <div *ngIf="withdrawalOptions.length" class="flex flex-col gap-2 h-[30vh]">
   <div

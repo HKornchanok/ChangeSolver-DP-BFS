@@ -32,10 +32,7 @@
         ],
         "styles": ["src/styles.scss"],
         "scripts": [],
-        "allowedCommonJsDependencies": [
-          "@supabase/realtime-js",
-          "ws"
-        ]
+        "allowedCommonJsDependencies": ["@supabase/realtime-js", "ws"]
       },
       "configurations": {
         "production": {

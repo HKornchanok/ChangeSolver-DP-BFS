@@ -33,5 +33,5 @@ export const selectPaginationWithItems = createSelector(
 
 export const selectSearchTerm = createSelector(
   selectPagination,
-  (pagination) => pagination.searchTerm,
+  pagination => pagination.searchTerm,
 );

@@ -27,7 +27,9 @@
         {{ this.searchTerm ? 'No results found' : 'No data available' }}
       </h4>
       <p class="text-[var(--text-gray)] text-lg">
-        {{ this.searchTerm ? 'Try changing your search term' : 'Please add some products to the list' }}
+        {{
+          this.searchTerm ? 'Try changing your search term' : 'Please add some products to the list'
+        }}
       </p>
     </div>
   </ng-template>
