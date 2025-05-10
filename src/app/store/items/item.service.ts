@@ -69,7 +69,7 @@ export class ItemService {
     // Calculate pagination metadata
     const total = count || 0;
     const complete = total === 0 || (page + 1) * limit >= total;
-
+    
     const newPagination = {
       shoes: shoes,
       page: page + 1,

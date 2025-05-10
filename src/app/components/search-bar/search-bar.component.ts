@@ -21,7 +21,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.itemsFacade.pagination$.pipe(takeUntil(this.destroy$)).subscribe(pagination => {
-      this.pagination = pagination;
+      this.pagination = { ...pagination };
     });
   }
 

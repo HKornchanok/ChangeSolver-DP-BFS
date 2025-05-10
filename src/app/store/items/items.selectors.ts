@@ -30,3 +30,8 @@ export const selectPaginationWithItems = createSelector(
     shoes,
   }),
 );
+
+export const selectSearchTerm = createSelector(
+  selectPagination,
+  (pagination) => pagination.searchTerm,
+);

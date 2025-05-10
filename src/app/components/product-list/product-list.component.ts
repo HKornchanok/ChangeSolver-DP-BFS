@@ -23,6 +23,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   public scrollDistance = 1;
   public scrollUpDistance = 2;
   public loading!: boolean;
+  public searchTerm!: string;
 
   constructor(
     private readonly itemsFacade: ItemsFacade,
@@ -32,6 +33,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.itemsFacade.pagination$.pipe(takeUntil(this.destroy$)).subscribe(pagination => {
       this.pagination = pagination;
+      this.searchTerm = pagination.searchTerm ?? '';
     });
 
     this.itemsFacade.loading$.pipe(takeUntil(this.destroy$)).subscribe(loading => {

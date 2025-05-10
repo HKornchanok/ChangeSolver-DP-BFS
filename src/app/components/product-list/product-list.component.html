@@ -1,5 +1,6 @@
 <section class="flex-1 flex flex-col h-[60vh]">
   <div
+    *ngIf="(shoes$ | async)?.length; else noData"
     class="grid grid-cols-2 p-1 lg:px-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-2 overflow-y-auto min-h-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[var(--black)] [&::-webkit-scrollbar-thumb]:bg-[var(--text-gray)] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[var(--text-white)]"
     infiniteScroll
     [infiniteScrollDistance]="scrollDistance"
@@ -18,4 +19,16 @@
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
     </div>
   </div>
+
+  <ng-template #noData>
+    <div class="flex-1 flex flex-col items-center justify-center gap-4">
+      <img src="assets/icons/document-text.svg" alt="no-data" class="w-10 h-10" />
+      <h4 class="text-2xl text-white">
+        {{ this.searchTerm ? 'No results found' : 'No data available' }}
+      </h4>
+      <p class="text-[var(--text-gray)] text-lg">
+        {{ this.searchTerm ? 'Try changing your search term' : 'Please add some products to the list' }}
+      </p>
+    </div>
+  </ng-template>
 </section>

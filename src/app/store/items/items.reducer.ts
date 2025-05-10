@@ -18,6 +18,7 @@ export interface ItemsEntityState extends EntityState<Shoe> {
     total: number;
     complete: boolean;
     reset: boolean;
+    searchTerm?: string;
   };
   loading: boolean;
 }
@@ -28,6 +29,7 @@ export const initialState: ItemsEntityState = itemsAdapter.getInitialState({
     total: 0,
     complete: false,
     reset: false,
+    searchTerm: '',
   },
   loading: false,
 });
@@ -48,6 +50,7 @@ export const itemsReducer = createReducer(
           total: pagination.total,
           complete: pagination.complete,
           reset: pagination.reset,
+          searchTerm: pagination.searchTerm,
         },
       });
     }
@@ -59,6 +62,7 @@ export const itemsReducer = createReducer(
         total: pagination.total,
         complete: pagination.complete,
         reset: pagination.reset,
+        searchTerm: pagination.searchTerm,
       },
     });
   }),
