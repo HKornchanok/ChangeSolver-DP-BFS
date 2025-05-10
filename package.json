@@ -1,5 +1,5 @@
 {
-  "name": "easy-cashier",
+  "name": "change-solver-dp-lcm-bfs",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
