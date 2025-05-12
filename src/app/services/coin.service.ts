@@ -18,7 +18,6 @@ export class CoinService {
    * Gets all possible withdrawal options for a given amount.
    * Uses different strategies based on amount size:
    * - Large amounts: Mathematical optimizations
-   * - Medium amounts: LCM optimization
    * - Small amounts: Complete search
    * @param amount - The amount to get withdrawal options for
    * @returns Array of all possible coin combinations
@@ -32,14 +31,6 @@ export class CoinService {
       return this.handleLargeAmount(amount, this.COIN_SIZES);
     }
 
-    // Apply LCM optimization before proceeding
-    const optimizedAmount = this.applyLCMOptimization(amount, this.COIN_SIZES);
-    if (optimizedAmount.reduced) {
-      // The amount was optimized using LCM properties
-      return optimizedAmount.result || [];
-    }
-
-    // If no LCM optimization was possible, proceed with the standard approach
     const minCoinsNeeded = this.findMinCoins(amount);
     if (minCoinsNeeded === Infinity) return [];
 
@@ -155,139 +146,6 @@ export class CoinService {
     return { coins: solution, amount: totalUsed };
   }
 
-  /**
-   * Applies Least Common Multiple (LCM) optimization to reduce problem size.
-   * Uses mathematical relationships between coin denominations to find optimal solutions.
-   * @param amount - The amount to optimize
-   * @param coins - Available coin denominations
-   * @returns Object containing optimization result and whether reduction was possible
-   */
-  private applyLCMOptimization(
-    amount: number,
-    coins: number[],
-  ): { reduced: boolean; result?:CoinCombination[]} {
-    // Find pairs of coins that have mathematical relationships
-    for (let i = 0; i < coins.length; i++) {
-      for (let j = i + 1; j < coins.length; j++) {
-        const a = coins[i];
-        const b = coins[j];
-        const gcd = this.gcd(a, b);
-
-        if (gcd > 1) {
-          // These coins have a common factor
-          const lcm = (a * b) / gcd;
-
-          // Check if the amount is divisible by the LCM
-          if (amount % lcm === 0) {
-            // We can optimize this case!
-            const factor = amount / lcm;
-            const baseCoins = this.solveForLCM(a, b, lcm);
-
-            // Scale the solution by the factor
-            const result = this.scaleCoinsResult(baseCoins, factor);
-            return { reduced: true, result: [result] };
-          }
-        }
-      }
-    }
-
-    return { reduced: false };
-  }
-
-  /**
-   * Calculates Greatest Common Divisor using Euclidean algorithm.
-   * @param a - First number
-   * @param b - Second number
-   * @returns GCD of the two numbers
-   */
-  private gcd(a: number, b: number): number {
-    // Euclidean algorithm for GCD
-    while (b !== 0) {
-      const temp = b;
-      b = a % b;
-      a = temp;
-    }
-    return a;
-  }
-
-  /**
-   * Solves for optimal coin combination when amount is divisible by LCM.
-   * Uses extended Euclidean algorithm to find Bézout coefficients.
-   * @param a - First coin denomination
-   * @param b - Second coin denomination
-   * @param lcm - Least Common Multiple of a and b
-   * @returns Optimal coin combination
-   */
-  private solveForLCM(a: number, b: number, lcm: number): { [key: number]: number } {
-    // Extended Euclidean algorithm to find Bézout coefficients
-    // ax + by = gcd(a,b)
-    let [x, y] = this.extendedGcd(a, b);
-
-    // Scale up to match LCM
-    const gcd = this.gcd(a, b);
-    const factor = lcm / gcd;
-
-    // Make sure both coefficients are non-negative
-    while (x < 0 || y < 0) {
-      if (x < 0) {
-        x += b / gcd;
-        y -= a / gcd;
-      }
-      if (y < 0) {
-        x -= b / gcd;
-        y += a / gcd;
-      }
-    }
-
-    x *= factor / b;
-    y *= factor / a;
-
-    const result: { [key: number]: number } = {};
-    result[a] = y;
-    result[b] = x;
-    return result;
-  }
-
-  /**
-   * Extended Euclidean algorithm to find Bézout coefficients.
-   * Solves ax + by = gcd(a,b) for integers x and y.
-   * @param a - First number
-   * @param b - Second number
-   * @returns Tuple of Bézout coefficients [x, y]
-   */
-  private extendedGcd(a: number, b: number): [number, number] {
-    if (b === 0) {
-      return [1, 0];
-    }
-
-    const [x1, y1] = this.extendedGcd(b, a % b);
-    const x = y1;
-    const y = x1 - Math.floor(a / b) * y1;
-
-    return [x, y];
-  }
-
-  /**
-   * Scales a coin combination by a given factor.
-   * @param coins - Original coin combination
-   * @param factor - Scaling factor
-   * @returns Scaled coin combination with updated total
-   */
-  private scaleCoinsResult(
-    coins: { [key: number]: number },
-    factor: number,
-  ): CoinCombination {
-    const scaledCoins: { [key: number]: number } = {};
-    let totalCoins = 0;
-
-    for (const coin in coins) {
-      const count = coins[coin] * factor;
-      scaledCoins[coin] = count;
-      totalCoins += count;
-    }
-
-    return { coins: scaledCoins, amount: totalCoins };
-  }
 
   /**
    * Memory-efficient implementation to find minimum coins needed.

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "npm install && npm run build",
-  "outputDirectory": "dist/change-solver-dp-lcm-bfs/browser",
+  "outputDirectory": "dist/change-solver-dp-bfs/browser",
   "rewrites": [
     {
       "source": "/(.*)",

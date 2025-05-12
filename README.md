@@ -1,5 +1,5 @@
 
-# ChangeSolver-DP-LCM-BFS
+# ChangeSolver-DP-BFS
 
 > Solve, Optimize, and Scale coin change with precision-engineered algorithms!
 
@@ -36,7 +36,7 @@
 
 ## Overview
 
-ChangeSolver-DP-LCM-BFS is a comprehensive point-of-sale algorithm module that streamlines change calculation using a multi-strategy approach. It is designed for high performance and low memory consumption, capable of solving for optimal coin combinations across various input sizes.
+ChangeSolver-DP-BFS is a comprehensive point-of-sale algorithm module that streamlines change calculation using a multi-strategy approach. It is designed for high performance and low memory consumption, capable of solving for optimal coin combinations across various input sizes.
 
 ## Getting Started
 
@@ -211,8 +211,7 @@ This application implements an advanced algorithm for finding optimal coin combi
 The coin combination algorithm uses a multi-strategy approach that selects the appropriate technique based on the input amount:
 
 1.  **Large Amounts (>1000)**: Mathematical optimizations and pattern recognition
-2.  **Medium Amounts (100-1000)**: LCM-based optimizations and residue handling
-3.  **Small Amounts (<100)**: Memory-efficient dynamic programming with BFS
+3.  **Small Amounts (<1000)**: Memory-efficient dynamic programming with BFS
 
 ### Mathematical Foundations
 
@@ -328,42 +327,11 @@ private findMinCoins(amount: number): number {
 
 This achieves O(amount) time complexity with O(largestCoin) space complexity by using a circular array of size 12.
 
-#### 2. LCM Optimization for Medium Amounts
-
-For medium-sized amounts (100-1000), we leverage mathematical relationships between coin denominations:
-
-```typescript
-private applyLCMOptimization(amount: number, coins: number[]): { reduced: boolean; result?: any } {
-  // Find coin pairs with mathematical relationships
-  for (let i = 0; i < coins.length; i++) {
-    for (let j = i + 1; j < coins.length; j++) {
-      const a = coins[i];
-      const b = coins[j];
-      const gcd = this.gcd(a, b);
-
-      if (gcd > 1) {
-        // These coins have a common factor
-        const lcm = (a * b) / gcd;
-
-        // Check if amount is divisible by the LCM
-        if (amount % lcm === 0) {
-          // We can optimize this case!
-          const factor = amount / lcm;
-          const baseCoins = this.solveForLCM(a, b, lcm);
-          const result = this.scaleCoinsResult(baseCoins, factor);
-          return { reduced: true, result: [result] };
-        }
-      }
-    }
-  }
-  return { reduced: false };
-}
-
 ```
 
 This uses Bézout's identity via the extended Euclidean algorithm to find optimal coin combinations, achieving O(1) time complexity for applicable cases.
 
-#### 3. Large Amount Processing
+#### 2. Large Amount Processing
 
 For very large amounts (>1000), we use advanced mathematical properties to avoid memory issues:
 
@@ -385,7 +353,7 @@ private handleLargeAmount(
 
 This approach ensures O(largestCoin) time complexity for large amounts by focusing on a single optimal solution.
 
-#### 4. Memory-Efficient BFS for All Solutions
+#### 3. Memory-Efficient BFS for All Solutions
 
 To find all possible optimal combinations, we use a space-efficient BFS approach:
 
@@ -449,7 +417,7 @@ private findAllCombinations(
 This approach caps memory usage with a fixed-size queue and uses state deduplication to prevent redundant computations.
 
 
-#### 5. Greedy Solution Attempt
+#### 4. Greedy Solution Attempt
 The algorithm first tries a greedy approach, which is optimal for some amounts:
 
 ```typescript
@@ -476,22 +444,6 @@ private tryGreedySolution(
 ```
 
 ### Advanced Optimization Techniques
-
-#### Extended Euclidean Algorithm
-
-For solving Diophantine equations in LCM optimization:
-
-```typescript
-private extendedGcd(a: number, b: number): [number, number] {
-  if (b === 0) return [1, 0];
-  
-  const [x1, y1] = this.extendedGcd(b, a % b);
-  const x = y1;
-  const y = x1 - Math.floor(a / b) * y1;
-  
-  return [x, y];
-}
-```
 
 #### Deduplication
 
@@ -524,8 +476,7 @@ This allows O(1) calculation for residue handling, dramatically speeding up the 
 
 -   **Time Complexity**:
     
-    - Small amounts (<100): O(amount * |COIN_SIZES|) for DP, O(amount * |COIN_SIZES| * S) for BFS, where S is the number of solutions.
-    - Medium amounts (100-1000): O(1) if LCM optimization applies; otherwise, same as small amounts.
+    - Small amounts (<1000): O(amount * |COIN_SIZES|) for DP, O(amount * |COIN_SIZES| * S) for BFS, where S is the number of solutions.
     - Large amounts (>1000): O(largestCoin) for minimum coins, O(1) for single solution generation.
 -   **Space Complexity**:
     
@@ -548,4 +499,4 @@ This allows O(1) calculation for residue handling, dramatically speeding up the 
 
 ----------
 
-_ChangeSolver-DP-LCM-BFS is implemented as an Angular service_
+_ChangeSolver-DP-BFS is implemented as an Angular service_

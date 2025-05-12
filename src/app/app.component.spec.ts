@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'change-solver-dp-lcm-bfs' title`, () => {
+  it(`should have the 'change-solver-dp-bfs' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('change-solver-dp-lcm-bfs');
+    expect(app.title).toEqual('change-solver-dp-bfs');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, change-solver-dp-lcm-bfs');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, change-solver-dp-bfs');
   });
 });
