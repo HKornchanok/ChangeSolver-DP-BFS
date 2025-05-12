@@ -25,7 +25,7 @@ export class CoinService {
   public getAllWithdrawalOptions(amount: number): CoinCombination[] {
     // Handle very large amounts specially to avoid memory issues
 
-    if (amount > 10000) {
+    if (amount > Math.max(...this.COIN_SIZES) * 1000) {
       return this.handleLargeAmount(amount, this.COIN_SIZES);
     }
 
@@ -90,10 +90,10 @@ export class CoinService {
     const sortedCoins = [...coins].sort((a, b) => b - a); // e.g., [11,7,5,1]
     const largestCoin = sortedCoins[0]; // e.g., 11
 
-    // Greedy subtract with buffer (e.g., subtract 4 to leave room for residue correction)
-    const largestCount = Math.max(Math.floor(remaining / largestCoin) - 4, 0);
+    // Greedy subtract with buffer (e.g., subtract 20 to leave room for residue correction)
+    const largestCount = Math.min(Math.floor(remaining / largestCoin) - 20, Math.floor(remaining / largestCoin));
     remaining -= largestCoin * largestCount;
-
+    console.log('remaining', remaining);
     const smallAmountOptions: CoinCombination[] = [];
     const minCoinsNeeded = this.findMinCoins(remaining);
     this.findAllCombinations(remaining, minCoinsNeeded, smallAmountOptions);
