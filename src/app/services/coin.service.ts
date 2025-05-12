@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CoinCombination } from '../interfaces/coin.interface';
+import { CoinCombination, ResiduePatterns } from '../interfaces/coin.interface';
 
 /**
  * Service for handling coin-related calculations and optimizations.
@@ -15,27 +15,45 @@ export class CoinService {
   private readonly COIN_SIZES = [11, 7, 5, 1];
 
   /**
-   * Calculates the optimal coin combination for a given amount using a greedy approach.
-   * This method is suitable for small amounts and provides a single optimal solution.
-   * @param amount - The total amount to make change for
-   * @returns Object containing the coin combination and total number of coins used
+   * Gets all possible withdrawal options for a given amount.
+   * Uses different strategies based on amount size:
+   * - Large amounts: Mathematical optimizations
+   * - Medium amounts: LCM optimization
+   * - Small amounts: Complete search
+   * @param amount - The amount to get withdrawal options for
+   * @returns Array of all possible coin combinations
    */
-  calculateOptimalCoinCombination(amount: number): CoinCombination {
-    let remaining = amount;
-    const coins: { [key: number]: number } = {};
-    let totalCoins = 0;
+  public getAllWithdrawalOptions(
+    amount: number,
+  ): CoinCombination[] {
 
-    for (const coinSize of this.COIN_SIZES) {
-      const count = Math.floor(remaining / coinSize);
-      if (count > 0) {
-        coins[coinSize] = count;
-        remaining -= count * coinSize;
-        totalCoins += count;
-      }
+    // Handle very large amounts specially to avoid memory issues
+    if (amount > 1000) {
+      return this.handleLargeAmount(amount, this.COIN_SIZES);
     }
 
-    return { coins, totalCoins };
+    // Apply LCM optimization before proceeding
+    const optimizedAmount = this.applyLCMOptimization(amount, this.COIN_SIZES);
+    if (optimizedAmount.reduced) {
+      // The amount was optimized using LCM properties
+      return optimizedAmount.result || [];
+    }
+
+    // If no LCM optimization was possible, proceed with the standard approach
+    const minCoinsNeeded = this.findMinCoins(amount);
+    if (minCoinsNeeded === Infinity) return [];
+
+    // Then find all combinations that use this minimum number
+    const options: CoinCombination[] = [];
+
+    // Use an iterative approach instead of recursion to avoid call stack overhead
+    this.findAllCombinations(amount, minCoinsNeeded, options);
+
+    // We've already ensured uniqueness in findAllCombinations method
+    // No need for extra filtering here
+    return options;
   }
+
   /**
    * Handles large amounts (over 1000) using mathematical optimizations to avoid memory issues.
    * Uses properties of the Frobenius coin problem and residue patterns for efficient calculation.
@@ -46,15 +64,14 @@ export class CoinService {
   private handleLargeAmount(
     amount: number,
     coins: number[],
-  ): { coins: { [key: number]: number }; totalCoins: number }[] {
-    const options: { coins: { [key: number]: number }; totalCoins: number }[] = [];
+  ): CoinCombination[] {
+    const options: CoinCombination[] = [];
 
     // For large amounts, we can use the Frobenius coin problem properties
     // First, determine the minimum number of coins needed using memory-efficient DP
-    const minCoins = this.findMinCoinsForLargeAmount(amount, coins);
 
     // Get the base solution using a greedy approach + residue handling
-    const baseSolution = this.getCompactSolution(amount, coins, minCoins);
+    const baseSolution = this.getCompactSolution(amount, coins);
     if (baseSolution) {
       options.push(baseSolution);
     }
@@ -63,64 +80,6 @@ export class CoinService {
     // Computing all solutions for large amounts would be prohibitively expensive
 
     return options;
-  }
-
-  /**
-   * Memory-efficient algorithm to find minimum coins needed for large amounts.
-   * Uses mathematical properties of the coin system and a sliding window approach.
-   * @param amount - The amount to calculate minimum coins for
-   * @param coins - Available coin denominations
-   * @returns Minimum number of coins needed
-   */
-  private findMinCoinsForLargeAmount(amount: number, coins: number[]): number {
-    // We can calculate this efficiently for our specific coin system [11,7,5,1]
-    // where gcd(coins) = 1, which means any amount >= (largest coin)*(smallest coin) - (largest coin) - (smallest coin)
-    // can be represented
-
-    // For our coin system [11,7,5,1], the Frobenius number is:
-    // F(11,7,5,1) = 1*11 - 1 = 10
-    // This means any amount >= 11 can be represented
-
-    // For very large amounts, the minimum number of coins approaches amount/largest_coin
-    // For fine-tuned calculation, we need to handle the residue optimally
-
-    // Base case: if amount <= 0, return 0
-    if (amount <= 0) return 0;
-
-    // For very large amounts, we first divide by the largest coin
-    const largestCoin = Math.max(...coins);
-    const smallestCoin = Math.min(...coins);
-
-    // Quick mathematical property: if gcd(coins) = 1, then for sufficiently large n,
-    // min_coins(n) = ⌊n/largestCoin⌋ + min_coins(n % largestCoin)
-
-    // Calculate quotient and remainder
-    const quotient = Math.floor(amount / largestCoin);
-    const remainder = amount % largestCoin;
-
-    // For the remainder, we use a space-efficient approach
-    const dp = new Array(largestCoin + 1).fill(Infinity);
-    dp[0] = 0;
-
-    // We only need to compute up to largestCoin, regardless of the original amount
-    for (let i = 1; i <= largestCoin; i++) {
-      for (const coin of coins) {
-        if (i - coin >= 0) {
-          dp[i] = Math.min(dp[i], dp[i - coin] + 1);
-        }
-      }
-    }
-
-    // Frobenius number property: after a certain threshold, we can always form any amount optimally
-    if (remainder >= largestCoin * smallestCoin - largestCoin - smallestCoin && remainder > 0) {
-      // We're beyond the Frobenius number, so we use the mathematical formula
-      const residue = remainder % largestCoin;
-      const residueCoins = residue > 0 ? dp[residue] : 0;
-      return quotient + remainder / largestCoin + residueCoins;
-    }
-
-    // Otherwise, use our dp table
-    return quotient + (remainder > 0 ? dp[remainder] : 0);
   }
 
   /**
@@ -134,8 +93,7 @@ export class CoinService {
   private getCompactSolution(
     amount: number,
     coins: number[],
-    minCoins: number,
-  ): { coins: { [key: number]: number }; totalCoins: number } {
+  ): CoinCombination {
     const solution: { [key: number]: number } = {};
     let remaining = amount;
     let totalUsed = 0;
@@ -153,24 +111,10 @@ export class CoinService {
 
     // For the residue, we use normalized mathematical patterns
     // These are precomputed optimal patterns for the remainder modulo 11
-    const residuePatterns: { [key: number]: { [key: number]: number } } = {
-      0: {}, // No residue
-      1: { 1: 1 }, // 1 = 1
-      2: { 1: 2 }, // 2 = 1+1
-      3: { 1: 3 }, // 3 = 1+1+1
-      4: { 5: 1, 1: 1 }, // 4 = 5-1
-      5: { 5: 1 }, // 5
-      6: { 7: 1, 1: 1 }, // 6 = 7-1
-      7: { 7: 1 }, // 7
-      8: { 5: 1, 1: 3 }, // 8 = 5+3
-      9: { 5: 1, 1: 4 }, // 9 = 5+4
-      10: { 5: 2 }, // 10 = 5+5
-    };
-
     // Apply the optimal pattern for the residue
     const residue = remaining % largestCoin; // remainder mod 11
     if (residue > 0) {
-      const pattern = residuePatterns[residue];
+      const pattern = this.demonstrateRemainderCoinsCalculation()[residue];
       for (const coin in pattern) {
         const count = pattern[coin];
         if (!solution[coin]) solution[coin] = 0;
@@ -208,47 +152,7 @@ export class CoinService {
       }
     }
 
-    return { coins: solution, totalCoins: totalUsed };
-  }
-  /**
-   * Gets all possible withdrawal options for a given amount.
-   * Uses different strategies based on amount size:
-   * - Large amounts: Mathematical optimizations
-   * - Medium amounts: LCM optimization
-   * - Small amounts: Complete search
-   * @param amount - The amount to get withdrawal options for
-   * @returns Array of all possible coin combinations
-   */
-  getAllWithdrawalOptions(
-    amount: number,
-  ): { coins: { [key: number]: number }; totalCoins: number }[] {
-    const COIN_SIZES = [11, 7, 5, 1];
-
-    // Handle very large amounts specially to avoid memory issues
-    if (amount > 1000) {
-      return this.handleLargeAmount(amount, COIN_SIZES);
-    }
-
-    // Apply LCM optimization before proceeding
-    const optimizedAmount = this.applyLCMOptimization(amount, COIN_SIZES);
-    if (optimizedAmount.reduced) {
-      // The amount was optimized using LCM properties
-      return optimizedAmount.result || [];
-    }
-
-    // If no LCM optimization was possible, proceed with the standard approach
-    const minCoinsNeeded = this.findMinCoins(amount);
-    if (minCoinsNeeded === Infinity) return [];
-
-    // Then find all combinations that use this minimum number
-    const options: { coins: { [key: number]: number }; totalCoins: number }[] = [];
-
-    // Use an iterative approach instead of recursion to avoid call stack overhead
-    this.findAllCombinations(amount, minCoinsNeeded, options);
-
-    // We've already ensured uniqueness in findAllCombinations method
-    // No need for extra filtering here
-    return options;
+    return { coins: solution, amount: totalUsed };
   }
 
   /**
@@ -261,7 +165,7 @@ export class CoinService {
   private applyLCMOptimization(
     amount: number,
     coins: number[],
-  ): { reduced: boolean; result?: { coins: { [key: number]: number }; totalCoins: number }[] } {
+  ): { reduced: boolean; result?:CoinCombination[]} {
     // Find pairs of coins that have mathematical relationships
     for (let i = 0; i < coins.length; i++) {
       for (let j = i + 1; j < coins.length; j++) {
@@ -372,7 +276,7 @@ export class CoinService {
   private scaleCoinsResult(
     coins: { [key: number]: number },
     factor: number,
-  ): { coins: { [key: number]: number }; totalCoins: number } {
+  ): CoinCombination {
     const scaledCoins: { [key: number]: number } = {};
     let totalCoins = 0;
 
@@ -382,7 +286,7 @@ export class CoinService {
       totalCoins += count;
     }
 
-    return { coins: scaledCoins, totalCoins };
+    return { coins: scaledCoins, amount: totalCoins };
   }
 
   /**
@@ -455,16 +359,16 @@ export class CoinService {
   private findAllCombinations(
     amount: number,
     minCoins: number,
-    options: { coins: { [key: number]: number }; totalCoins: number }[],
+    options: CoinCombination[],
   ) {
     const COIN_SIZES = [11, 7, 5, 1];
-    
+
     // Store solution keys for deduplication
     const solutionKeys = new Set<string>();
 
     // Try the greedy solution if it's optimal
     const greedySolution = this.tryGreedySolution(amount, COIN_SIZES);
-    if (greedySolution && greedySolution.totalCoins === minCoins) {
+    if (greedySolution && greedySolution.amount === minCoins) {
       // Add to options and mark as visited
       options.push(greedySolution);
       const greedyKey = this.createSolutionKey(greedySolution.coins);
@@ -509,11 +413,11 @@ export class CoinService {
               coins[c] = current[i];
             }
           });
-          
+
           // Check if we've already found this solution
           const solutionKey = this.createSolutionKey(coins);
           if (!solutionKeys.has(solutionKey)) {
-            options.push({ coins, totalCoins: totalUsed });
+            options.push({ coins, amount: totalUsed });
             solutionKeys.add(solutionKey);
           }
         }
@@ -558,8 +462,7 @@ export class CoinService {
    */
   private createSolutionKey(coins: { [key: number]: number }): string {
     // Sort by coin denomination for consistent keys
-    return this.COIN_SIZES
-      .filter(coin => coins[coin] > 0)
+    return this.COIN_SIZES.filter(coin => coins[coin] > 0)
       .map(coin => `${coin}:${coins[coin]}`)
       .join('|');
   }
@@ -574,7 +477,7 @@ export class CoinService {
   private tryGreedySolution(
     amount: number,
     coins: number[],
-  ): { coins: { [key: number]: number }; totalCoins: number } | null {
+  ): CoinCombination | null {
     const result: { [key: number]: number } = {};
     let remaining = amount;
     let totalCoins = 0;
@@ -592,21 +495,47 @@ export class CoinService {
     }
 
     if (remaining === 0) {
-      return { coins: result, totalCoins };
+      return { coins: result, amount: totalCoins };
     }
 
     return null; // Greedy approach failed
   }
 
   /**
-   * Formats a coin combination into a human-readable string.
-   * Example: "11฿x2, 7฿x1, 5฿x1"
-   * @param combination - The coin combination to format
-   * @returns Formatted string representation
+   * Demonstrates how to calculate the remainderCoins array with detailed explanation.
+   * This is for educational purposes to show how the values are derived.
    */
-  formatCoinCombination(combination: CoinCombination): string {
-    return this.COIN_SIZES.filter(coinSize => combination.coins[coinSize] > 0)
-      .map(coinSize => `${coinSize}฿x${combination.coins[coinSize]}`)
-      .join(', ');
+  private demonstrateRemainderCoinsCalculation(): ResiduePatterns {
+    const COIN_SIZES = [11, 7, 5, 1];
+    const residuePatterns: ResiduePatterns = {};
+  
+    for (let remainder = 0; remainder <= 10; remainder++) {
+      const dp = new Array(remainder + 1).fill(Infinity);
+      const choices = new Array(remainder + 1).fill(-1);
+      dp[0] = 0;
+  
+      // Compute DP
+      for (let i = 1; i <= remainder; i++) {
+        for (const coin of COIN_SIZES) {
+          if (i - coin >= 0 && dp[i - coin] + 1 < dp[i]) {
+            dp[i] = dp[i - coin] + 1;
+            choices[i] = coin;
+          }
+        }
+      }
+  
+      // Reconstruct solution
+      const solution: { [key: number]: number } = {};
+      let current = remainder;
+      while (current > 0) {
+        const coin = choices[current];
+        solution[coin] = (solution[coin] || 0) + 1;
+        current -= coin;
+      }
+  
+      residuePatterns[remainder] = solution;
+    }
+  
+    return residuePatterns;
   }
 }

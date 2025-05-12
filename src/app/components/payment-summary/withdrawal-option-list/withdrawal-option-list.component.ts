@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { WithdrawalOptionItemComponent } from '../withdrawal-option-item/withdrawal-option-item.component';
+import { CoinCombination } from '../../../interfaces/coin.interface';
 
 @Component({
   selector: 'app-withdrawal-option-list',
@@ -10,6 +11,6 @@ import { WithdrawalOptionItemComponent } from '../withdrawal-option-item/withdra
   imports: [CommonModule, WithdrawalOptionItemComponent],
 })
 export class WithdrawalOptionListComponent {
-  @Input() withdrawalOptions: { coins: { [key: number]: number }; totalCoins: number }[] = [];
+  @Input() withdrawalOptions: CoinCombination[] = [];
   readonly coinSizes = [11, 7, 5, 1];
 }

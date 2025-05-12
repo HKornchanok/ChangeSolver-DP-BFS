@@ -14,7 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CoinService } from '../../services/coin.service';
 import { OrdersFacade } from '../../store/orders/orders.facade';
 import { WithdrawalOptionListComponent } from './withdrawal-option-list/withdrawal-option-list.component';
-
+import { CoinCombination } from '../../interfaces/coin.interface';
 @Component({
   selector: 'app-payment-summary',
   templateUrl: './payment-summary.component.html',
@@ -24,13 +24,11 @@ import { WithdrawalOptionListComponent } from './withdrawal-option-list/withdraw
 })
 export class PaymentSummaryComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private readonly COIN_SIZES = [11, 7, 5, 1];
 
   public paymentForm: FormGroup;
   public change = 0;
   public total!: number;
-  public coinCombination = '';
-  public withdrawalOptions: { coins: { [key: number]: number }; totalCoins: number }[] = [];
+  public withdrawalOptions: CoinCombination[] = [];
 
   constructor(
     private ordersFacade: OrdersFacade,
@@ -68,11 +66,8 @@ export class PaymentSummaryComponent implements OnInit, OnDestroy {
       this.change = received - this.total;
 
       if (this.change > 0) {
-        const combination = this.coinService.calculateOptimalCoinCombination(this.change);
-        this.coinCombination = this.coinService.formatCoinCombination(combination);
         this.withdrawalOptions = this.coinService.getAllWithdrawalOptions(this.change);
       } else {
-        this.coinCombination = '';
         this.withdrawalOptions = [];
       }
     }

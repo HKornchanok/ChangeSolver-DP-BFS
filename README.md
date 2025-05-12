@@ -164,7 +164,7 @@ The system calculates change using these denominations:
 - Color palette and typography system documentation
 - Supabase integration for data persistence and initial product data
 
-## Backend Integration
+#### Backend Integration
 - Connected to Supabase for data management
 - Initial product data stored in Supabase database
 - Real-time data synchronization
@@ -174,7 +174,7 @@ The system calculates change using these denominations:
   - Efficient querying with Supabase's range pagination
   - Maintains smooth scrolling performance
 
-## State Management & Performance
+#### State Management & Performance
 - NgRx implementation for robust state management:
   - Centralized store for application state
   - Actions and reducers for predictable state updates
@@ -192,7 +192,7 @@ The system calculates change using these denominations:
   - No need for NgModule declarations
   - Easier component reuse and composition
 
-## Code Maintenance & Formatting
+#### Code Maintenance & Formatting
 - Prettier integration for consistent code formatting:
   - Automatic code formatting on save
   - Enforced consistent code style across the project
@@ -203,7 +203,8 @@ The system calculates change using these denominations:
 
 ### Coin Combination Algorithm
 
-The application implements a sophisticated algorithm for finding optimal coin combinations using denominations [11, 7, 5, 1]. The algorithm adaptively employs different strategies based on the amount being processed, providing an optimal balance between memory efficiency, runtime performance, and solution completeness.
+This application implements an advanced algorithm for finding optimal coin combinations using denominations [11, 7, 5, 1]. The algorithm dynamically selects strategies based on the input amount, balancing memory efficiency, runtime performance, and solution completeness.
+
 
 ### Core Algorithm Architecture
 
@@ -217,7 +218,7 @@ The coin combination algorithm uses a multi-strategy approach that selects the a
 
 #### Frobenius Coin Problem
 
-For our coin system [11, 7, 5, 1], the Frobenius number is 10, meaning any amount larger than 10 can be represented using our coin denominations. This mathematical property allows us to use simplified approaches for larger amounts.
+For the coin system [11, 7, 5, 1], the greatest common divisor (gcd) is 1, ensuring that any non-negative amount can be represented. The algorithm leverages this property to guarantee solutions for all valid inputs. For large amounts, it uses the fact that the minimum number of coins approximates ⌊amount/largestCoin⌋ + min_coins(amount % largestCoin).
 
 ```
 F(11,7,5,1) = 1*11 - 1 = 10
@@ -228,6 +229,40 @@ F(11,7,5,1) = 1*11 - 1 = 10
 
 The algorithm leverages modular arithmetic to efficiently handle change calculations.  
 For amounts modulo 11, we use these precomputed optimal patterns:
+
+```typescript
+private demonstrateRemainderCoinsCalculation(): { [key: number]: { [key: number]: number } } {
+  const COIN_SIZES = [11, 7, 5, 1];
+  const residuePatterns: { [key: number]: { [key: number]: number } } = {};
+  
+  for (let remainder = 0; remainder <= 10; remainder++) {
+    const dp = new Array(remainder + 1).fill(Infinity);
+    const choices = new Array(remainder + 1).fill(-1);
+    dp[0] = 0;
+
+    // Compute DP
+    for (let i = 1; i <= remainder; i++) {
+        for (const coin of COIN_SIZES) {
+          if (i - coin >= 0 && dp[i - coin] + 1 < dp[i]) {
+          dp[i] = dp[i - coin] + 1;
+          choices[i] = coin;
+        }
+      }
+    }
+  
+    const solution: { [key: number]: number } = {};
+    let current = remainder;
+    while (current > 0) {
+      const coin = choices[current];
+      solution[coin] = (solution[coin] || 0) + 1;
+      current -= coin;
+    }
+  
+    residuePatterns[remainder] = solution;
+  }
+  return residuePatterns;
+}
+```
 
 | Residue | Optimal Coin Combination    |
 |---------|-----------------------------|
@@ -243,6 +278,9 @@ For amounts modulo 11, we use these precomputed optimal patterns:
 | 9       | 1 × 5 + 4 × 1               |
 | 10      | 2 × 5                       |
 
+These patterns are used in `getCompactSolution`
+
+
 
 ### Algorithm Implementation
 
@@ -252,16 +290,30 @@ For amounts up to 100, we use a memory-optimized dynamic programming approach:
 
 ```typescript
 private findMinCoins(amount: number): number {
-  // We only need to store the last (largestCoin + 1) states
+  const COIN_SIZES = [11, 7, 5, 1];
+
+  if (amount === 0) return 0;
+  if (amount < 0) return Infinity;
+
+   
+  if (amount > 100) {
+    const quotient = Math.floor(amount / 11);
+    const remainder = amount % 11;
+
+    const remainderCoins = [0, 1, 2, 3, 4, 1, 2, 1, 3, 4, 2];
+
+    return quotient + remainderCoins[remainder];
+  }
+
+  const largestCoin = Math.max(...COIN_SIZES);
   const dp = new Array(largestCoin + 1).fill(Infinity);
-  dp[0] = 0;  // Base case
 
-  // Build solution using a sliding window approach
+  dp[0] = 0;
+
   for (let target = 1; target <= amount; target++) {
-    const pos = target % (largestCoin + 1);  // Circular array position
-    dp[pos] = Infinity;  // Reset before calculating
+    const pos = target % (largestCoin + 1);
+    dp[pos] = Infinity;
 
-    // Try each coin denomination
     for (const coin of COIN_SIZES) {
       if (target - coin >= 0) {
         const prevPos = (target - coin) % (largestCoin + 1);
@@ -272,10 +324,9 @@ private findMinCoins(amount: number): number {
 
   return dp[amount % (largestCoin + 1)];
 }
-
 ```
 
-This approach achieves O(1) space complexity regardless of input size, using only a fixed-size circular array.
+This achieves O(amount) time complexity with O(largestCoin) space complexity by using a circular array of size 12.
 
 #### 2. LCM Optimization for Medium Amounts
 
@@ -310,67 +361,119 @@ private applyLCMOptimization(amount: number, coins: number[]): { reduced: boolea
 
 ```
 
-This technique uses Bézout's identity and the extended Euclidean algorithm to find optimal solutions when the amount has special mathematical properties.
+This uses Bézout's identity via the extended Euclidean algorithm to find optimal coin combinations, achieving O(1) time complexity for applicable cases.
 
 #### 3. Large Amount Processing
 
 For very large amounts (>1000), we use advanced mathematical properties to avoid memory issues:
 
 ```typescript
-private handleLargeAmount(amount: number, coins: number[]): any[] {
-  // For large amounts, calculate the base solution using mathematical properties
-  const minCoins = this.findMinCoinsForLargeAmount(amount, coins);
-  const baseSolution = this.getCompactSolution(amount, coins, minCoins);
-  
-  return baseSolution ? [baseSolution] : [];
+private handleLargeAmount(
+  amount: number,
+  coins: number[],
+): CoinCombination[] {
+  const options: CoinCombination[] = [];
+
+  const baseSolution = this.getCompactSolution(amount, coins);
+  if (baseSolution) {
+    options.push(baseSolution);
+  }
+
+  return options;
 }
-
 ```
 
-The algorithm uses the fact that for large amounts, the minimum number of coins approaches:
-
-```
-min_coins(n) = ⌊n/largestCoin⌋ + min_coins(n % largestCoin)
-
-```
+This approach ensures O(largestCoin) time complexity for large amounts by focusing on a single optimal solution.
 
 #### 4. Memory-Efficient BFS for All Solutions
 
 To find all possible optimal combinations, we use a space-efficient BFS approach:
 
 ```typescript
-private findAllCombinations(amount: number, minCoins: number, options: any[]) {
-  // Use a compact state representation
-  const queue = new Array(Math.min(maxStates, 10000));  // Cap size
-  let head = 0, tail = 0;  // Circular queue indices
-  const visited = new Set<string>();  // Track visited states
-  
-  // Start BFS
+private findAllCombinations(
+  amount: number,
+  minCoins: number,
+  options: { coins: { [key: number]: number }; totalCoins: number }[]
+) {
+  const COIN_SIZES = [11, 7, 5, 1];
+  const solutionKeys = new Set<string>();
+  const maxStates = Math.min(10000, amount * COIN_SIZES.length);
+  const visited = new Set<string>();
+  const queue = new Array(maxStates);
+  let head = 0, tail = 0;
+
   queue[tail++] = {
     remaining: amount,
     index: 0,
     current: Array(COIN_SIZES.length).fill(0),
     totalUsed: 0,
   };
-  
+
   while (head !== tail) {
-    // Process each state in the queue
-    // ...
-    
-    // For each state, try two options:
-    // 1. Skip this coin denomination
-    // 2. Take one of this coin denomination
+    const { remaining, index, current, totalUsed } = queue[head++];
+    if (head >= queue.length) head = 0;
+    const stateKey = `${remaining}:${index}:${totalUsed}`;
+    if (visited.has(stateKey)) continue;
+    visited.add(stateKey);
+
+    if (totalUsed > minCoins) continue;
+    if (remaining === 0 && totalUsed === minCoins) {
+      const coins: { [key: number]: number } = {};
+      COIN_SIZES.forEach((c, i) => {
+        if (current[i] > 0) coins[c] = current[i];
+      });
+      const solutionKey = this.createSolutionKey(coins);
+      if (!solutionKeys.has(solutionKey)) {
+        options.push({ coins, totalCoins: totalUsed });
+        solutionKeys.add(solutionKey);
+      }
+      continue;
+    }
+    if (index >= COIN_SIZES.length) continue;
+
+    const coin = COIN_SIZES[index];
+    if (index < COIN_SIZES.length - 1) {
+      queue[tail++] = { remaining, index: index + 1, current: [...current], totalUsed };
+      if (tail >= queue.length) tail = 0;
+    }
+    if (remaining >= coin && totalUsed + 1 <= minCoins) {
+      const newCurrent = [...current];
+      newCurrent[index]++;
+      queue[tail++] = { remaining: remaining - coin, index, current: newCurrent, totalUsed: totalUsed + 1 };
+      if (tail >= queue.length) tail = 0;
+    }
   }
 }
-
 ```
 
-This approach prevents memory overflow by:
+This approach caps memory usage with a fixed-size queue and uses state deduplication to prevent redundant computations.
 
-1.  Using a fixed-size circular queue
-2.  Employing a compact state representation
-3.  Deduplicating states with a visit set
-4.  Pruning non-optimal paths early
+
+#### 5. Greedy Solution Attempt
+The algorithm first tries a greedy approach, which is optimal for some amounts:
+
+```typescript
+private tryGreedySolution(
+  amount: number,
+  coins: number[]
+): { coins: { [key: number]: number }; totalCoins: number } | null {
+  const result: { [key: number]: number } = {};
+  let remaining = amount;
+  let totalCoins = 0;
+  const sortedCoins = [...coins].sort((a, b) => b - a);
+
+  for (const coin of sortedCoins) {
+    if (remaining >= coin) {
+      const count = Math.floor(remaining / coin);
+      result[coin] = count;
+      totalCoins += count;
+      remaining -= count * coin;
+    }
+  }
+
+  return remaining === 0 ? { coins: result, totalCoins } : null;
+}
+```
 
 ### Advanced Optimization Techniques
 
@@ -388,8 +491,19 @@ private extendedGcd(a: number, b: number): [number, number] {
   
   return [x, y];
 }
-
 ```
+
+#### Deduplication
+
+```typescript
+private createSolutionKey(coins: { [key: number]: number }): string {
+  return this.COIN_SIZES.filter(coin => coins[coin] > 0)
+    .map(coin => `${coin}:${coins[coin]}`)
+    .join('|');
+}
+```
+
+The algorithm uses a Set to track visited states and unique solutions, ensuring memory efficiency:
 
 This algorithm finds integers x, y such that ax + by = gcd(a,b), which is crucial for finding optimal coin combinations.
 
@@ -410,13 +524,14 @@ This allows O(1) calculation for residue handling, dramatically speeding up the 
 
 -   **Time Complexity**:
     
-    -   Small amounts: O(n), where n is the amount
-    -   Medium amounts: O(log n) with LCM optimization
-    -   Large amounts: O(1) using mathematical properties
+    - Small amounts (<100): O(amount * |COIN_SIZES|) for DP, O(amount * |COIN_SIZES| * S) for BFS, where S is the number of solutions.
+    - Medium amounts (100-1000): O(1) if LCM optimization applies; otherwise, same as small amounts.
+    - Large amounts (>1000): O(largestCoin) for minimum coins, O(1) for single solution generation.
 -   **Space Complexity**:
     
-    -   Constant O(1) regardless of input size
-    -   Maximum memory usage capped at 10,000 states
+    - O(largestCoin) for DP sliding window.
+    - O(min(10000, amount * |COIN_SIZES|)) for BFS queue.
+    - O(S) for storing solutions, where S is the number of unique solutions.
 
 ### Edge Case Handling
 
