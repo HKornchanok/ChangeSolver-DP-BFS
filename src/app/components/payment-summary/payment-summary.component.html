@@ -13,6 +13,7 @@
           type="number"
           placeholder="Enter received money"
           formControlName="receivedMoney"
+          (input)="onInputDigitsLimit($event)"
           class="bg-[var(--black)] text-[var(--text-white)] rounded px-3 py-2 bg-black flex-1 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] border border-gray-800"
           [class.border-red-500]="receivedMoneyControl.invalid && receivedMoneyControl.touched"
         />
@@ -37,6 +38,9 @@
         >
         <span *ngIf="receivedMoneyControl.errors?.['hasDigits']"
           >Please enter the amount in words, not digits</span
+        >
+        <span *ngIf="receivedMoneyControl.errors?.['maxDigits']"
+          >Input cannot exceed 16 digits</span
         >
       </div>
     </div>

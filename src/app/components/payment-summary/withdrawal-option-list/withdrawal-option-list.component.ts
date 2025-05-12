@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { WithdrawalOptionItemComponent } from '../withdrawal-option-item/withdrawal-option-item.component';
 import { CoinCombination } from '../../../interfaces/coin.interface';
+import { WithdrawalOptionItemComponent } from '../withdrawal-option-item/withdrawal-option-item.component';
 
 @Component({
   selector: 'app-withdrawal-option-list',

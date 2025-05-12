@@ -1,4 +1,3 @@
-
 # ChangeSolver-DP-BFS
 
 > Solve, Optimize, and Scale coin change with precision-engineered algorithms!
@@ -205,87 +204,20 @@ The system calculates change using these denominations:
 
 This application implements an advanced algorithm for finding optimal coin combinations using denominations [11, 7, 5, 1]. The algorithm dynamically selects strategies based on the input amount, balancing memory efficiency, runtime performance, and solution completeness.
 
-
 ### Core Algorithm Architecture
 
 The coin combination algorithm uses a multi-strategy approach that selects the appropriate technique based on the input amount:
 
-1.  **Large Amounts (>1000)**: Mathematical optimizations and pattern recognition
-3.  **Small Amounts (<1000)**: Memory-efficient dynamic programming with BFS
+1. **Large Amounts (>10000)**: Mathematical optimizations and pattern recognition
+2. **Small Amounts (<10000)**: Memory-efficient dynamic programming with BFS
 
 ### Mathematical Foundations
-
-#### Frobenius Coin Problem
-
-For the coin system [11, 7, 5, 1], the greatest common divisor (gcd) is 1, ensuring that any non-negative amount can be represented. The algorithm leverages this property to guarantee solutions for all valid inputs. For large amounts, it uses the fact that the minimum number of coins approximates ⌊amount/largestCoin⌋ + min_coins(amount % largestCoin).
-
-```
-F(11,7,5,1) = 1*11 - 1 = 10
-
-```
-
-### Residue Patterns
-
-The algorithm leverages modular arithmetic to efficiently handle change calculations.  
-For amounts modulo 11, we use these precomputed optimal patterns:
-
-```typescript
-private demonstrateRemainderCoinsCalculation(): { [key: number]: { [key: number]: number } } {
-  const COIN_SIZES = [11, 7, 5, 1];
-  const residuePatterns: { [key: number]: { [key: number]: number } } = {};
-  
-  for (let remainder = 0; remainder <= 10; remainder++) {
-    const dp = new Array(remainder + 1).fill(Infinity);
-    const choices = new Array(remainder + 1).fill(-1);
-    dp[0] = 0;
-
-    // Compute DP
-    for (let i = 1; i <= remainder; i++) {
-        for (const coin of COIN_SIZES) {
-          if (i - coin >= 0 && dp[i - coin] + 1 < dp[i]) {
-          dp[i] = dp[i - coin] + 1;
-          choices[i] = coin;
-        }
-      }
-    }
-  
-    const solution: { [key: number]: number } = {};
-    let current = remainder;
-    while (current > 0) {
-      const coin = choices[current];
-      solution[coin] = (solution[coin] || 0) + 1;
-      current -= coin;
-    }
-  
-    residuePatterns[remainder] = solution;
-  }
-  return residuePatterns;
-}
-```
-
-| Residue | Optimal Coin Combination    |
-|---------|-----------------------------|
-| 0       | (none needed)               |
-| 1       | 1 × 1                       |
-| 2       | 2 × 1                       |
-| 3       | 3 × 1                       |
-| 4       | 1 × 5 - 1 × 1               |
-| 5       | 1 × 5                       |
-| 6       | 1 × 7 - 1 × 1               |
-| 7       | 1 × 7                       |
-| 8       | 1 × 5 + 3 × 1               |
-| 9       | 1 × 5 + 4 × 1               |
-| 10      | 2 × 5                       |
-
-These patterns are used in `getCompactSolution`
-
-
 
 ### Algorithm Implementation
 
 #### 1. Memory-Efficient Dynamic Programming
 
-For amounts up to 100, we use a memory-optimized dynamic programming approach:
+For finding minimum coins needed, we use a memory-optimized dynamic programming approach:
 
 ```typescript
 private findMinCoins(amount: number): number {
@@ -294,19 +226,8 @@ private findMinCoins(amount: number): number {
   if (amount === 0) return 0;
   if (amount < 0) return Infinity;
 
-   
-  if (amount > 100) {
-    const quotient = Math.floor(amount / 11);
-    const remainder = amount % 11;
-
-    const remainderCoins = [0, 1, 2, 3, 4, 1, 2, 1, 3, 4, 2];
-
-    return quotient + remainderCoins[remainder];
-  }
-
   const largestCoin = Math.max(...COIN_SIZES);
   const dp = new Array(largestCoin + 1).fill(Infinity);
-
   dp[0] = 0;
 
   for (let target = 1; target <= amount; target++) {
@@ -325,51 +246,37 @@ private findMinCoins(amount: number): number {
 }
 ```
 
-This achieves O(amount) time complexity with O(largestCoin) space complexity by using a circular array of size 12.
-
-```
-
-This uses Bézout's identity via the extended Euclidean algorithm to find optimal coin combinations, achieving O(1) time complexity for applicable cases.
+This achieves O(amount) time complexity with O(largestCoin) space complexity by using a circular array.
 
 #### 2. Large Amount Processing
 
-For very large amounts (>1000), we use advanced mathematical properties to avoid memory issues:
+For very large amounts (>10000), we use advanced mathematical properties to avoid memory issues:
 
 ```typescript
-private handleLargeAmount(
-  amount: number,
-  coins: number[],
-): CoinCombination[] {
+private handleLargeAmount(amount: number, coins: number[]): CoinCombination[] {
   const options: CoinCombination[] = [];
-
   const baseSolution = this.getCompactSolution(amount, coins);
   if (baseSolution) {
-    options.push(baseSolution);
+    options.push(...baseSolution);
   }
-
   return options;
 }
 ```
-
-This approach ensures O(largestCoin) time complexity for large amounts by focusing on a single optimal solution.
 
 #### 3. Memory-Efficient BFS for All Solutions
 
 To find all possible optimal combinations, we use a space-efficient BFS approach:
 
 ```typescript
-private findAllCombinations(
-  amount: number,
-  minCoins: number,
-  options: { coins: { [key: number]: number }; totalCoins: number }[]
-) {
+private findAllCombinations(amount: number, minCoins: number, options: CoinCombination[]) {
   const COIN_SIZES = [11, 7, 5, 1];
   const solutionKeys = new Set<string>();
-  const maxStates = Math.min(10000, amount * COIN_SIZES.length);
+  const maxStates = Math.min(100000, amount * COIN_SIZES.length);
   const visited = new Set<string>();
   const queue = new Array(maxStates);
   let head = 0, tail = 0;
 
+  // Start with the first coin
   queue[tail++] = {
     remaining: amount,
     index: 0,
@@ -380,6 +287,7 @@ private findAllCombinations(
   while (head !== tail) {
     const { remaining, index, current, totalUsed } = queue[head++];
     if (head >= queue.length) head = 0;
+
     const stateKey = `${remaining}:${index}:${totalUsed}`;
     if (visited.has(stateKey)) continue;
     visited.add(stateKey);
@@ -392,7 +300,7 @@ private findAllCombinations(
       });
       const solutionKey = this.createSolutionKey(coins);
       if (!solutionKeys.has(solutionKey)) {
-        options.push({ coins, totalCoins: totalUsed });
+        options.push({ coins, amount: totalUsed });
         solutionKeys.add(solutionKey);
       }
       continue;
@@ -414,17 +322,11 @@ private findAllCombinations(
 }
 ```
 
-This approach caps memory usage with a fixed-size queue and uses state deduplication to prevent redundant computations.
-
-
 #### 4. Greedy Solution Attempt
 The algorithm first tries a greedy approach, which is optimal for some amounts:
 
 ```typescript
-private tryGreedySolution(
-  amount: number,
-  coins: number[]
-): { coins: { [key: number]: number }; totalCoins: number } | null {
+private tryGreedySolution(amount: number, coins: number[]): CoinCombination | null {
   const result: { [key: number]: number } = {};
   let remaining = amount;
   let totalCoins = 0;
@@ -439,7 +341,7 @@ private tryGreedySolution(
     }
   }
 
-  return remaining === 0 ? { coins: result, totalCoins } : null;
+  return remaining === 0 ? { coins: result, amount: totalCoins } : null;
 }
 ```
 
@@ -459,43 +361,32 @@ The algorithm uses a Set to track visited states and unique solutions, ensuring 
 
 This algorithm finds integers x, y such that ax + by = gcd(a,b), which is crucial for finding optimal coin combinations.
 
-#### Pattern Recognition for Residues
 
-For amounts modulo the largest coin, we use precomputed patterns:
-
-```typescript
-// Precomputed optimal values for remainders mod 11
-const remainderCoins = [0, 1, 2, 3, 4, 1, 2, 1, 3, 4, 2];
-return quotient + remainderCoins[remainder];
-
-```
 
 This allows O(1) calculation for residue handling, dramatically speeding up the algorithm.
 
 ### Performance Characteristics
 
--   **Time Complexity**:
-    
-    - Small amounts (<1000): O(amount * |COIN_SIZES|) for DP, O(amount * |COIN_SIZES| * S) for BFS, where S is the number of solutions.
-    - Large amounts (>1000): O(largestCoin) for minimum coins, O(1) for single solution generation.
--   **Space Complexity**:
-    
-    - O(largestCoin) for DP sliding window.
-    - O(min(10000, amount * |COIN_SIZES|)) for BFS queue.
-    - O(S) for storing solutions, where S is the number of unique solutions.
+- **Time Complexity**:
+  - Small amounts (<10000): O(amount * |COIN_SIZES|) for DP, O(amount * |COIN_SIZES| * S) for BFS, where S is the number of solutions
+  - Large amounts (>10000): O(largestCoin) for minimum coins, O(1) for single solution generation
+- **Space Complexity**:
+  - O(largestCoin) for DP sliding window
+  - O(min(10000, amount * |COIN_SIZES|)) for BFS queue
+  - O(S) for storing solutions, where S is the number of unique solutions
 
 ### Edge Case Handling
 
--   **Zero or Negative Amounts**: Returns 0 or special values
--   **Very Large Amounts**: Uses mathematical properties to avoid overflow
--   **Non-Canonical Systems**: Fallback to complete search when greedy fails
+- **Zero or Negative Amounts**: Returns 0 or Infinity
+- **Very Large Amounts**: Uses mathematical properties to avoid overflow
+- **Non-Canonical Systems**: Fallback to complete search when greedy fails
 
 ### Multiple Solution Support
 
--   Finds all optimal combinations with the same minimum coin count
--   Handles both unique and multiple solutions
--   Returns single optimal solution for very large amounts (>1000) to conserve memory
--   Recognizes when the greedy algorithm produces the optimal solution
+- Finds all optimal combinations with the same minimum coin count
+- Handles both unique and multiple solutions
+- Returns single optimal solution for very large amounts (>10000) to conserve memory
+- Recognizes when the greedy algorithm produces the optimal solution
 
 ----------
 

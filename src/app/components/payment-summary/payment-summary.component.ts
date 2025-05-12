@@ -11,10 +11,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { CoinCombination } from '../../interfaces/coin.interface';
 import { CoinService } from '../../services/coin.service';
 import { OrdersFacade } from '../../store/orders/orders.facade';
 import { WithdrawalOptionListComponent } from './withdrawal-option-list/withdrawal-option-list.component';
-import { CoinCombination } from '../../interfaces/coin.interface';
 @Component({
   selector: 'app-payment-summary',
   templateUrl: './payment-summary.component.html',
@@ -36,11 +36,19 @@ export class PaymentSummaryComponent implements OnInit, OnDestroy {
     private coinService: CoinService,
   ) {
     this.paymentForm = this.fb.group({
-      receivedMoney: [null, [Validators.required, Validators.min(0), this.wholeNumberValidator()]],
+      receivedMoney: [
+        null,
+        [
+          Validators.required,
+          Validators.min(0),
+          this.wholeNumberValidator(),
+          this.maxDigitsValidator(16),
+        ],
+      ],
     });
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.ordersFacade.total$.pipe(takeUntil(this.destroy$)).subscribe(total => {
       this.total = total;
       const ctrl = this.paymentForm.get('receivedMoney');
@@ -55,12 +63,21 @@ export class PaymentSummaryComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  calculateChange() {
+  public onInputDigitsLimit(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, ''); // Get only digits
+    if (digits.length > 16) {
+      input.value = digits.slice(0, 16); // Truncate extra digits
+      this.receivedMoneyControl.setValue(Number(input.value)); // Update form control
+    }
+  }
+
+  public calculateChange() {
     if (this.paymentForm.valid) {
       const received = Number(this.receivedMoneyControl.value);
       this.change = received - this.total;
@@ -79,14 +96,20 @@ export class PaymentSummaryComponent implements OnInit, OnDestroy {
     };
   }
 
-  get receivedMoneyControl() {
+  private maxDigitsValidator(maxDigits: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (value == null) return null;
+      const digits = value.toString().replace(/[^0-9]/g, '').length;
+      return digits > maxDigits ? { maxDigits: true } : null;
+    };
+  }
+
+  public get receivedMoneyControl() {
     return this.paymentForm.get('receivedMoney') as FormControl;
   }
 
-  public trackByFn(
-    index: number,
-    option: { coins: { [key: number]: number }; totalCoins: number },
-  ) {
-    return option.totalCoins;
+  public trackByFn(index: number, option: CoinCombination) {
+    return option.amount;
   }
 }
