@@ -34,19 +34,8 @@ export class CoinService {
 
     // Then find all combinations that use this minimum number
     const options: CoinCombination[] = [];
-
-    // Use an iterative approach instead of recursion to avoid call stack overhead
     this.findAllCombinations(amount, minCoinsNeeded, options);
 
-    // Find the minimum amount of coins used in the options
-    const minAmount = Math.min(...options.map(opt => opt.amount));
-    // Filter options to only those with the minimum number of coins
-    const filteredOptions = options.filter(opt => opt.amount === minAmount);
-    // Replace options array contents with filtered options
-    options.length = 0;
-    options.push(...filteredOptions);
-    // We've already ensured uniqueness in findAllCombinations method
-    // No need for extra filtering here
     return options;
   }
 
@@ -84,7 +73,6 @@ export class CoinService {
    * @returns Optimal coin combination
    */
   private getCompactSolution(amount: number, coins: number[]): CoinCombination[] {
-    const solution: { [key: number]: number } = {};
     let remaining = amount;
 
     const sortedCoins = [...coins].sort((a, b) => b - a); // e.g., [11,7,5,1]
@@ -147,7 +135,7 @@ export class CoinService {
         }
       }
     }
-
+    console.log('dp', dp[amount % (largestCoin + 1)]);
     // Return the result from the final position
     return dp[amount % (largestCoin + 1)];
   }
@@ -164,14 +152,6 @@ export class CoinService {
 
     // Store solution keys for deduplication
     const solutionKeys = new Set<string>();
-
-    // Try the greedy solution if it's optimal
-    const greedySolution = this.tryGreedySolution(amount, COIN_SIZES);
-    if (greedySolution) {
-      options.push(greedySolution);
-      const greedyKey = this.createSolutionKey(greedySolution.coins);
-      solutionKeys.add(greedyKey);
-    }
 
     // Use a more memory-efficient breadth-first search
     // Calculate a reasonable size for the queue
@@ -263,36 +243,5 @@ export class CoinService {
     return this.COIN_SIZES.filter(coin => coins[coin] > 0)
       .map(coin => `${coin}:${coins[coin]}`)
       .join('|');
-  }
-
-  /**
-   * Attempts to find a solution using the greedy approach.
-   * Works optimally for canonical coin systems.
-   * @param amount - The amount to find solution for
-   * @param coins - Available coin denominations
-   * @returns Greedy solution if found, null otherwise
-   */
-  private tryGreedySolution(amount: number, coins: number[]): CoinCombination | null {
-    const result: { [key: number]: number } = {};
-    let remaining = amount;
-    let totalCoins = 0;
-
-    // Sort coins in descending order
-    const sortedCoins = [...coins].sort((a, b) => b - a);
-
-    for (const coin of sortedCoins) {
-      if (remaining >= coin) {
-        const count = Math.floor(remaining / coin);
-        result[coin] = count;
-        totalCoins += count;
-        remaining -= count * coin;
-      }
-    }
-
-    if (remaining === 0) {
-      return { coins: result, amount: totalCoins };
-    }
-
-    return null; // Greedy approach failed
   }
 }
