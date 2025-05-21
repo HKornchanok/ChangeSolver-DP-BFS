@@ -52,14 +52,11 @@ export class CoinService {
     // For large amounts, we can use the Frobenius coin problem properties
     // First, determine the minimum number of coins needed using memory-efficient DP
 
-    // Get the base solution using a greedy approach + residue handling
+    // Get the base solution using a residue handling
     const baseSolution = this.getCompactSolution(amount, coins);
     if (baseSolution) {
       options.push(...baseSolution);
     }
-
-    // For large amounts, we'll only return one optimal solution to save memory
-    // Computing all solutions for large amounts would be prohibitively expensive
 
     return options;
   }
