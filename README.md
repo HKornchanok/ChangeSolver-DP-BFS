@@ -390,4 +390,65 @@ This allows O(1) calculation for residue handling, dramatically speeding up the 
 
 ----------
 
+```mermaid
+graph TD
+    A("Start") --> B("Define coins")
+    B --> C("Check base cases")
+    C --> D("Create dp array")
+    D --> E("Set dp[0] = 0")
+    E --> F("For each amount")
+    F --> G("For each coin")
+    G --> H{"Can use coin?"}
+    H -->|"Yes"| I("Update minimum")
+    H -->|"No"| J{"More coins?"}
+    I --> J
+    J -->|"Yes"| G
+    J -->|"No"| K{"More amounts?"}
+    K -->|"Yes"| F
+    K -->|"No"| L("Return result")
+    L --> M("End")
+
+```
+
+```mermaid
+flowchart TD
+    A[Start] --> B[Initialize data structures]
+    B --> C[Create first state in queue]
+    C --> D{Is queue empty?}
+    D -->|Yes| E[End]
+    D -->|No| F[Dequeue next state]
+    
+    F --> G[Create state key]
+    G --> H{Already visited?}
+    H -->|Yes| D
+    H -->|No| I[Mark state as visited]
+    
+    I --> J{Using too many coins?}
+    J -->|Yes| D
+    J -->|No| K{Is remaining amount = 0?}
+    
+    K -->|Yes| L{Is total used = minCoins?}
+    L -->|No| D
+    L -->|Yes| M[Create solution key]
+    M --> N{Solution already found?}
+    N -->|Yes| D
+    N -->|No| O[Add to solutions]
+    O --> D
+    
+    K -->|No| P{Processed all coin sizes?}
+    P -->|Yes| D
+    P -->|No| Q[Process current coin type]
+    
+    Q --> R[Try skipping this coin]
+    R --> S{More coin types available?}
+    S -->|Yes| T[Enqueue state with next coin type]
+    T --> U
+    S -->|No| U
+    
+    Q --> U[Try taking one of this coin]
+    U --> V{Enough remaining amount AND within coin limit?}
+    V -->|Yes| W[Enqueue state with one more of current coin]
+    W --> D
+    V -->|No| D
+```
 _ChangeSolver-DP-BFS is implemented as an Angular service_
